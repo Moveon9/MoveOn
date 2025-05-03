@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
-import { Image } from 'react-native';
-import styled from 'styled-components/native';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  SafeAreaView,
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 export default function ChallengePage() {
@@ -8,7 +14,7 @@ export default function ChallengePage() {
   const navigation = useNavigation();
 
   const handleSelect = (type) => {
-    setSelected(prev => (prev === type ? null : type));
+    setSelected((prev) => (prev === type ? null : type));
   };
 
   const handleComplete = () => {
@@ -18,98 +24,141 @@ export default function ChallengePage() {
   };
 
   return (
-    <Container>
-      <Header>
-        <Logo source={require('../assets/image/common/LogoLetter.png')} />
-      </Header>
+    <SafeAreaView style={styles.safeContainer}>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Image
+            source={require('../assets/image/common/LogoLetter.png')}
+            style={styles.logo}
+          />
+        </View>
 
-      <Title>이용하실 Challenge를{'\n'}선택해주세요.</Title>
+        <View style={styles.middleContent}>
+          <Text style={styles.title}>
+            이용하실 Challenge를{'\n'}선택해주세요.
+          </Text>
 
-      <ButtonRow>
-        <ChallengeButton isSelected={selected === 'game'} onPress={() => handleSelect('game')}>
-          <Icon source={require('../assets/ic_game.png')} />
-          <ButtonText>땅따먹기</ButtonText>
-        </ChallengeButton>
+          <View style={styles.buttonRow}>
+            <TouchableOpacity
+              style={[
+                styles.challengeButton,
+                selected === 'game' && styles.selectedButton,
+              ]}
+              onPress={() => handleSelect('game')}
+            >
+              <Image
+                source={require('../assets/image/challenge/ic_GroundSelect.png')}
+                style={styles.icon}
+              />
+              <Text style={styles.buttonText}>땅따먹기</Text>
+            </TouchableOpacity>
 
-        <ChallengeButton isSelected={selected === 'marathon'} onPress={() => handleSelect('marathon')}>
-          <Icon source={require('../assets/ic_shoes.png')} />
-          <ButtonText>미니 마라톤</ButtonText>
-        </ChallengeButton>
-      </ButtonRow>
+            <TouchableOpacity
+              style={[
+                styles.challengeButton,
+                selected === 'marathon' && styles.selectedButton,
+              ]}
+              onPress={() => handleSelect('marathon')}
+            >
+              <Image
+                source={require('../assets/image/challenge/ic_MarathonSelect.png')}
+                style={styles.icon}
+              />
+              <Text style={styles.buttonText}>미니 마라톤</Text>
+            </TouchableOpacity>
+          </View>
 
-      <SelectButton isActive={selected !== null} onPress={handleComplete}>
-        <SelectButtonText>선택</SelectButtonText>
-      </SelectButton>
-    </Container>
+          <TouchableOpacity
+            style={[
+              styles.selectButton,
+              selected !== null && styles.activeSelectButton,
+            ]}
+            onPress={handleComplete}
+          >
+            <Text style={styles.selectButtonText}>선택</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </SafeAreaView>
   );
 }
 
-const Container = styled.View`
-  flex: 1;
-  padding: 20px;
-  align-items: center;
-`;
-
-const Header = styled.View`
-  width: 100%;
-  padding: 10px;
-  margin-top: 3px;
-  align-items: center;
-`;
-
-const Logo = styled.Image`
-  width: 150px;
-  height: 35px;
-  resize-mode: contain;
-`;
-
-const Title = styled.Text`
-  font-size: 23px;
-  color: #000;
-  text-align: center;
-  margin: 60px 0 0;
-`;
-
-const ButtonRow = styled.View`
-  flex-direction: row;
-  margin-top: 20px;
-  justify-content: center;
-`;
-
-const ChallengeButton = styled.TouchableOpacity`
-  width: 158px;
-  height: 207px;
-  background-color: ${({ isSelected }) => (isSelected ? '#398342' : 'gray')};
-  align-items: center;
-  justify-content: center;
-  margin: 0 8px;
-  border-radius: 10px;
-`;
-
-const Icon = styled.Image`
-  width: 77px;
-  height: 77px;
-  margin-bottom: 8px;
-  resize-mode: contain;
-`;
-
-const ButtonText = styled.Text`
-  font-size: 20px;
-  color: #fff;
-`;
-
-const SelectButton = styled.TouchableOpacity`
-  width: 150px;
-  height: 50px;
-  background-color: ${({ isActive }) => (isActive ? '#398342' : 'gray')};
-  align-items: center;
-  justify-content: center;
-  margin-top: 20px;
-  padding: 10px;
-  border-radius: 5px;
-`;
-
-const SelectButtonText = styled.Text`
-  font-size: 20px;
-  color: #fff;
-`;
+const styles = StyleSheet.create({
+  safeContainer: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  container: {
+    flex: 1,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  header: {
+    width: '100%',
+    alignItems: 'center',
+    marginTop: 15, // SafeArea
+    marginBottom: 10,
+  },
+  logo: {
+    width: 150,
+    height: 35,
+    resizeMode: 'contain',
+  },
+  middleContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+  },
+  title: {
+    fontSize: 23,
+    color: '#000',
+    textAlign: 'center',
+    marginBottom: 30,
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 20,
+  },
+  challengeButton: {
+    width: 158,
+    height: 207,
+    backgroundColor: 'gray',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: 8,
+    borderRadius: 10,
+  },
+  selectedButton: {
+    backgroundColor: '#398342',
+  },
+  icon: {
+    width: 77,
+    height: 77,
+    marginBottom: 8,
+    resizeMode: 'contain',
+  },
+  buttonText: {
+    fontSize: 20,
+    color: '#fff',
+  },
+  selectButton: {
+    width: 150,
+    height: 50,
+    backgroundColor: 'gray',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 40,
+  },
+  activeSelectButton: {
+    backgroundColor: '#398342',
+  },
+  selectButtonText: {
+    fontSize: 20,
+    color: '#fff',
+  },
+});

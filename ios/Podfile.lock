@@ -1977,7 +1977,6 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
->>>>>>> f7a5577 ([feat] ADD nav bar)
   - SocketRocket (0.7.1)
   - Yoga (0.0.0)
 
