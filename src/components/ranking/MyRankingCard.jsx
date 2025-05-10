@@ -5,10 +5,10 @@ import Profile from "../../assets/image/ranking/ic_default_profile.png";
 
 const MyRankingCard = ({rank, name, count}) => {
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView edges={['left', 'right']}style={styles.container}>
             <View style={styles.section}>
+              <Text style={[styles.label]}>나의 순위</Text>
                 <Text style={[styles.value]}>{rank}</Text>
-                <Text style={[styles.label]}>나의 순위</Text>
             </View>
             <View style={styles.centerSection}>
                 <View style={[styles.avatarCircle]}>
@@ -32,28 +32,26 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingHorizontal: 24,      // 좌우 간격 통일
-        paddingVertical: 12,
+        paddingVertical: 10,
         backgroundColor: '#fff',
         borderRadius: 12,
         borderWidth: 1.5,
         borderColor: '#398342',
-        marginBottom: 16,
+        marginBottom: 12,
       },
-    
       section: {
         alignItems: 'center',
         justifyContent: 'center',
       },
-    
       label: {
-        fontSize: 15,
+        fontSize: 13,
         fontFamily: 'Inter-Medium',
         color: '#398342',
         marginBottom: 4,
       },
     
       value: {
-        fontSize: 24,
+        fontSize: 20,
         fontFamily: 'Inter-SemiBold',
         color: '#398342',
       },
@@ -64,9 +62,9 @@ const styles = StyleSheet.create({
       },
     
       avatarCircle: {
-        width: 40,
-        height: 40,
-        borderRadius: 20,
+        width: 36,
+        height: 36,
+        borderRadius: 18,
         backgroundColor: '#eaf2ff',
         justifyContent: 'center',
         alignItems: 'center',
@@ -74,25 +72,25 @@ const styles = StyleSheet.create({
       },
     
       avatarImage: {
-        width: 24,
-        height: 24,
+        width: 22,
+        height: 22,
         resizeMode: 'contain',
       },
     
       centerLabel: {
-        fontSize: 15,
+        fontSize: 14,
         fontFamily: 'Inter-Regular',
         color: '#000',
       },
     
       countNumber: {
-        fontSize: 24,
+        fontSize: 20,
         fontFamily: 'Inter-SemiBold',
         color: '#398342',
       },
     
       countUnit: {
-        fontSize: 15,
+        fontSize: 14,
         color: 'rgba(0, 0, 0, 0.5)',
       },
     });
