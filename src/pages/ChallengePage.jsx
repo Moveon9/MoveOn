@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -7,11 +7,18 @@ import {
   StyleSheet,
   SafeAreaView,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
 export default function ChallengePage() {
   const [selected, setSelected] = useState(null);
   const navigation = useNavigation();
+
+  // ChallengePage로 다시 돌아올 때 선택 초기화
+  useFocusEffect(
+    useCallback(() => {
+      setSelected(null);
+    }, [])
+  );
 
   const handleSelect = (type) => {
     setSelected((prev) => (prev === type ? null : type));
@@ -97,19 +104,21 @@ const styles = StyleSheet.create({
   header: {
     width: '100%',
     alignItems: 'center',
-    marginTop: 15, // SafeArea
+    marginTop: 15,
     marginBottom: 10,
   },
   logo: {
     width: 150,
     height: 35,
     resizeMode: 'contain',
+    marginTop: 10,
   },
   middleContent: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
+    paddingBottom: 30,
   },
   title: {
     fontSize: 23,

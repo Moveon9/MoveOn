@@ -1,15 +1,44 @@
 // src/App.js
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { SafeAreaProvider } from 'react-native-safe-area-context'; // 추가
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import Nav from './src/components/Nav'; // 경로 오타 수정
+import Nav from './src/components/Nav';
+import MarathonListPage from './src/pages/marathon/MarathonListPage';
+import MarathonInfoPage from './src/pages/marathon/MarathonInfoPage';
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
     <SafeAreaProvider>
       <NavigationContainer>
-        <Nav />
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: false,
+            gestureEnabled: true,
+          }}
+        >
+          <Stack.Screen
+            name="MainTabs"
+            component={Nav}
+            options={{
+              gestureEnabled: false,
+            }}
+          />
+
+          <Stack.Screen
+            name="MarathonBoard"
+            component={MarathonListPage}
+          />
+
+          <Stack.Screen
+            name="MarathonInfoPage"
+            component={MarathonInfoPage}
+          />
+
+        </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>
   );
