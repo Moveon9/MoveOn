@@ -1,10 +1,10 @@
 import React from 'react';
 import { StyleSheet, ScrollView, Text, SafeAreaView, View } from 'react-native';
-import MyRankingCard from '../../components/ranking/MyRankingCard';
-import RankingList from '../../components/ranking/RankingList';
-import DateSelector from '../../components/ranking/DateSelector';
+import MyRankingCard from '../components/ranking/MyRankingCard';
+import RankingList from '../components/ranking/RankingList';
+import DateSelector from '../components/ranking/DateSelector';
 
-const RankingScreen = () => {
+const RankingPage = () => {
   return (
     <SafeAreaView style={styles.safeareaview}>
         <ScrollView style={styles.container}>
@@ -42,4 +42,4 @@ safeareaview: {
     },   
 });
 
-export default RankingScreen;
+export default RankingPage;
