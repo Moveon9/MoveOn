@@ -8,7 +8,7 @@ import ChallengeIcon from '../assets/image/nav/ic_ChallengeNavButton.svg';
 import RankingIcon from '../assets/image/nav/ic_RankingNavButton.svg';
 import ProfileIcon from '../assets/image/nav/ic_MyNavButton.svg';
 
-// 스크린 컴포넌트 (이름 통일!)
+// 스크린 컴포넌트
 import MainPage from '../pages/MainPage';
 import ChallengePage from '../pages/ChallengePage';
 import RankingPage from '../pages/RankingPage';
@@ -44,8 +44,16 @@ export default function Nav() {
         tabBarActiveTintColor: '#398342',
         tabBarInactiveTintColor: 'gray',
       })}
+      initialRouteName="Running"
     >
-      <Tab.Screen name="Running" component={MainPage} options={{ title: '러닝' }} />
+      <Tab.Screen 
+        name="Running" 
+        component={MainPage}
+        options={{ 
+          title: '러닝',
+          unmountOnBlur: false // 화면이 보이지 않을 때도 컴포넌트 유지
+        }}
+      />
       <Tab.Screen name="Challenge" component={ChallengePage} options={{ title: '챌린지' }} />
       <Tab.Screen name="Ranking" component={RankingPage} options={{ title: '랭킹' }} />
       <Tab.Screen name="MyPage" component={MyPage} options={{ title: '마이페이지' }} />
