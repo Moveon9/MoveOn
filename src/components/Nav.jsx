@@ -1,6 +1,7 @@
 // src/navigation/Nav.jsx
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useNavigation, useNavigationState } from '@react-navigation/native';
 
 // SVG 아이콘
 import HomeIcon from '../assets/image/nav/ic_RunningNavButton.svg';
@@ -17,6 +18,27 @@ import MyPage from '../pages/MyPage';
 const Tab = createBottomTabNavigator();
 
 export default function Nav() {
+  const navigation = useNavigation();
+  const state = useNavigationState(state => state);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('state', () => {
+      const routes = state.routes;
+      const currentRoute = routes[routes.length - 1];
+      if (currentRoute?.name === 'RunningRecordSave') {
+        navigation.setOptions({
+          tabBarStyle: { display: 'flex' }
+        });
+      } else {
+        navigation.setOptions({
+          tabBarStyle: { display: 'none' }
+        });
+      }
+    });
+
+    return unsubscribe;
+  }, [navigation, state]);
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({

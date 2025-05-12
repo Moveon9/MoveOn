@@ -1,10 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated, PanResponder } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
-export default function RunningPanel() {
+export default function RunningPanel({ region }) {
+  const navigation = useNavigation();
   const [isExpanded, setIsExpanded] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
   const [time, setTime] = useState(0);
+  const [distance, setDistance] = useState(0);
+  const [steps, setSteps] = useState(0);
+  const [gridCount, setGridCount] = useState(0);
   
   const panelHeight = useRef(new Animated.Value(100)).current;
   const timerRef = useRef(null);
@@ -59,7 +64,16 @@ export default function RunningPanel() {
 
   const stopTimer = () => {
     pauseTimer();
-    setTime(0);
+    // 운동 기록 저장 페이지로 이동
+    navigation.navigate('RunningRecordSave', {
+      duration: formatTime(time),
+      distance: `${distance}m`,
+      steps: steps.toLocaleString(),
+      gridCount,
+      heartRate: '-',
+      calories: '3,050',
+      region,
+    });
   };
 
   useEffect(() => {
@@ -104,11 +118,11 @@ export default function RunningPanel() {
             <View style={styles.statsColumn}>
               <View style={styles.statItem}>
                 <Text style={styles.statLabel}>거리</Text>
-                <Text style={styles.statValue}>0m</Text>
+                <Text style={styles.statValue}>{distance}m</Text>
               </View>
               <View style={styles.statItem}>
                 <Text style={styles.statLabel}>현재 칸의 수</Text>
-                <Text style={styles.statValue}>0</Text>
+                <Text style={styles.statValue}>{gridCount}</Text>
               </View>
             </View>
 
@@ -121,7 +135,7 @@ export default function RunningPanel() {
               </View>
               <View style={styles.statItem}>
                 <Text style={styles.statLabel}>걸음 수</Text>
-                <Text style={styles.statValue}>0</Text>
+                <Text style={styles.statValue}>{steps}</Text>
               </View>
             </View>
           </View>

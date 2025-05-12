@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, SafeAreaView, Platform } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 import MapViewComponent from '../components/map/MapViewComponent';
 import RunningPanel from '../components/running/RunningPanel';
+import TabBar from '../components/running/TabBar';
 
 export default function RunningPage() {
   const [region, setRegion] = useState({
@@ -47,8 +48,9 @@ export default function RunningPage() {
         </View>
       </SafeAreaView>
       <View style={styles.contentContainer}>
-        <RunningPanel />
+        <RunningPanel region={region} />
       </View>
+      <TabBar />
     </View>
   );
 }
@@ -59,11 +61,10 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     position: 'absolute',
-    top: Platform.OS === 'ios' ? 50 : 10, // iOS에서 상태바 아래로
+    top: Platform.OS === 'ios' ? 50 : 10,
     left: 0,
     right: 0,
     backgroundColor: 'transparent',
-    alignItems: 'center',
   },
   headerContent: {
     padding: 16,
@@ -87,6 +88,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    marginBottom: 49, // TabBar 높이만큼 여백
+    marginBottom: 60, // TabBar 높이만큼 여백
   },
 });
