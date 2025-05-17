@@ -7,7 +7,7 @@ export default function FriendItem({ name, selected, onPress }) {
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <View style={styles.profile}>
         <Image
-          source={require('../assets/image/mypage/DefaultProfile.png')}
+          source={require('../../assets/image/mypage/DefaultProfile.png')}
           style={styles.avatar}
         />
         <Text style={styles.name}>{name}</Text>

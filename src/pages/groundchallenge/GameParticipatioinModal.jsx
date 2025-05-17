@@ -10,8 +10,11 @@ import {
 } from 'react-native';
 import PointContext from '../../context/PointContext';
 import NotEnoughCoin from './NotEnoughCoin';
+import { useNavigation } from '@react-navigation/native'; 
+
 
 export default function GameParticipatioinModal({ visible, onClose, onStart }) {
+  const navigation = useNavigation();
   const { point } = useContext(PointContext);
   const [requestedPoint, setRequestedPoint] = useState('');
   const [isFocused, setIsFocused] = useState(false);
@@ -29,7 +32,8 @@ export default function GameParticipatioinModal({ visible, onClose, onStart }) {
       onClose();
       setTimeout(() => setShowNotEnoughModal(true), 100);
     } else {
-      onStart(numeric);
+      onClose();
+      navigation.navigate('GameInvitationPage',{point : numeric});
     }
   };
 

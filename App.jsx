@@ -1,5 +1,5 @@
 // src/App.js
-import React from 'react';
+import React, { useState } from 'react';
 import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -12,10 +12,12 @@ import CountdownScreen from './src/pages/countdown/CountdownScreen';
 import RunningPage from './src/pages/RunningPage';
 import MainUI from './src/components/main/MainUI';
 import { PointProvider } from './src/context/PointContext';
-
+import GameInvitationPage from './src/pages/groundchallenge/GameInvitationPage';
 
 const Stack = createNativeStackNavigator();
 export default function App() {
+const [showGameModal, setShowGameModal] = useState(true);
+const [showInviteScreen, setShowInviteScreen] = useState(false);
 
   return (
     <PointProvider>
@@ -75,6 +77,12 @@ export default function App() {
 
             <Stack.Screen name="MainUI" 
             component={MainUI} />
+
+            <Stack.Screen
+              name="GameInvitationPage"
+              component={GameInvitationPage}
+            />
+
 
           </Stack.Navigator>
         </NavigationContainer>

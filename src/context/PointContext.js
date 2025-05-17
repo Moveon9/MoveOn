@@ -5,7 +5,7 @@ const PointContext = createContext();
 
 // Provider 컴포넌트
 export const PointProvider = ({ children }) => {
-  const [point, setPoint] = useState(300);
+  const [point, setPoint] = useState(1000);
 
   return (
     <PointContext.Provider value={{ point, setPoint }}>
