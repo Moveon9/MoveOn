@@ -35,6 +35,11 @@ export default function CountdownTimer({ isPlaying, onComplete }) {
 
 const styles = StyleSheet.create({
     wrapper: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
         flex: 1,
         justifyContent: 'space-between', // 위-아래로 분산
         alignItems: 'center',

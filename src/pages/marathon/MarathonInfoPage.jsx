@@ -12,7 +12,7 @@ import {
 export default function MarathonInfoPage() {
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.wrapper}>
+      <View style={{flex:1}}>
         <ScrollView contentContainerStyle={styles.container}>
           <Image
             source={require('../../assets/image/marathon/MarathonSampleImg.png')}
@@ -170,6 +170,7 @@ const styles = StyleSheet.create({
   detailRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
+    justifyContent: 'flex-start',
   },
   icon: {
     width: 18,
@@ -205,11 +206,12 @@ const styles = StyleSheet.create({
     left: 24,
     right: 24,
     backgroundColor: '#398342',
-    borderRadius: 16,
-    paddingVertical: 14,
+    borderRadius: 20,
+    paddingVertical: 16,
     alignItems: 'center',
+    justifyContent: 'center',
     zIndex: 10,
-    height: 56,
+    height: 65,
   },
   challengeButtonText: {
     fontSize: 16,

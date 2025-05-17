@@ -1,45 +1,74 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import RecommendIcon from '../../assets/image/main/ic_recommendation.png';
+import RecommendationCard from '../courserecommend/PersonalRecommendation'; // 카드 컴포넌트 import
 
 export default function MainUI({ onStartPress }) {
+  const [showCard, setShowCard] = useState(false); // 추천 카드 표시 여부
+
   return (
-    <View style={styles.mainUI}>
-      <Text style={styles.title}>오늘 기록</Text>
-      <Text style={styles.area}>현재 나의 영역 - 50칸</Text>
-      <TouchableOpacity 
-        style={styles.startButton}
-        onPress={onStartPress}
-      >
-        <Text style={styles.buttonText}>시작하기</Text>
-      </TouchableOpacity>
-    </View>
+    <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
+      <View style={styles.mainUI}>
+        {/* 추천 아이콘 버튼 */}
+        <TouchableOpacity
+          style={styles.recommendIconWrapper}
+          onPress={() => setShowCard(!showCard)}
+        >
+          <Image source={RecommendIcon} style={styles.recommendIcon} />
+        </TouchableOpacity>
+
+        {/* 추천 카드 컴포넌트 렌더링 */}
+        {showCard && <RecommendationCard />}
+
+        {/* 시작하기 버튼 */}
+        <TouchableOpacity style={styles.startButton} onPress={onStartPress}>
+          <Text style={styles.buttonText}>시작하기</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 }
 
+
+
+
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
   mainUI: {
-    position: 'absolute',
-    top: 0,
-    width: '100%',
-    height: '100%',
+    flex: 1,
     alignItems: 'center',
-    paddingTop: 50,
+    position: 'relative',
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#000',
-    marginBottom: 10,
+  recommendIconWrapper: {
+    position: 'absolute',
+    top: 8,
+    right: 16,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    zIndex: 10,
   },
-  area: {
-    fontSize: 18,
-    color: '#666',
+  recommendIcon: {
+    width: 20,
+    height: 20,
+    resizeMode: 'contain',
   },
   startButton: {
     position: 'absolute',
-    bottom: 40,
+    bottom: 10,
     backgroundColor: '#398342',
-    borderRadius: 30,
+    borderRadius: 16,
     width: 300,
     height: 60,
     justifyContent: 'center',

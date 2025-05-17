@@ -11,7 +11,7 @@ export default function MarathonPage() {
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.pageTitle}>미니 마라톤</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('MarathonInfoPage')}>
+        <TouchableOpacity onPress={() => navigation.navigate('MarathonTabs')}>
           <MarathonCard />
         </TouchableOpacity>
       </ScrollView>

@@ -8,15 +8,20 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import GameParticipationModal from './groundchallenge/GameParticipatioinModal';
 
 export default function ChallengePage() {
   const [selected, setSelected] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [point, setPoint] = useState('');
   const navigation = useNavigation();
 
-  // ChallengePage로 다시 돌아올 때 선택 초기화
+  // ChallengePage로 다시 돌아올 때 초기화
   useFocusEffect(
     useCallback(() => {
       setSelected(null);
+      setModalVisible(false);
+      setPoint('');
     }, [])
   );
 
@@ -27,7 +32,15 @@ export default function ChallengePage() {
   const handleComplete = () => {
     if (selected === 'marathon') {
       navigation.navigate('MarathonBoard');
+    } else if (selected === 'game') {
+      setModalVisible(true);
     }
+  };
+
+  const handleStartGame = () => {
+    setModalVisible(false);
+    console.log(`게임 시작! 포인트: ${point}`);
+    // TODO: 게임 시작 처리 로직 추가
   };
 
   return (
@@ -86,6 +99,15 @@ export default function ChallengePage() {
           </TouchableOpacity>
         </View>
       </View>
+
+      {/* 모달 컴포넌트 */}
+      <GameParticipationModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        onStart={handleStartGame}
+        point={point}
+        setPoint={setPoint}
+      />
     </SafeAreaView>
   );
 }

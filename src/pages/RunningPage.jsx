@@ -4,40 +4,14 @@ import Geolocation from '@react-native-community/geolocation';
 import MapViewComponent from '../components/map/MapViewComponent';
 import RunningPanel from '../components/running/RunningPanel';
 
-export default function RunningPage() {
-  const [region, setRegion] = useState({
-    latitude: 37.5665,
-    longitude: 126.9780,
-    latitudeDelta: 0.01,
-    longitudeDelta: 0.01,
-  });
-  const [currentSpeed, setCurrentSpeed] = useState(0);
-
-  useEffect(() => {
-    Geolocation.requestAuthorization();
-    Geolocation.getCurrentPosition(
-      (position) => {
-        setRegion({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-          latitudeDelta: 0.01,
-          longitudeDelta: 0.01,
-        });
-        if (position.coords.speed) {
-          setCurrentSpeed((position.coords.speed * 3.6).toFixed(1));
-        }
-      },
-      (error) => console.log(error),
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-    );
-  }, []);
+export default function RunningPage({ route }) {
+  const { region, currentSpeed } = route.params;
 
   return (
     <View style={styles.container}>
-      <MapViewComponent 
-        region={region} 
-        onRegionChange={setRegion}
-      />
+      <MapViewComponent region={region} onRegionChange={() => {}} />
+  
+      {/* 상단 정보 */}
       <SafeAreaView style={styles.headerContainer} edges={['top']}>
         <View style={styles.headerContent}>
           <View style={styles.titleContainer}>
@@ -46,11 +20,12 @@ export default function RunningPage() {
           </View>
         </View>
       </SafeAreaView>
-      <View style={styles.contentContainer}>
-        <RunningPanel />
-      </View>
+  
+      {/* 바로 RunningPanel 배치 */}
+      <RunningPanel />
     </View>
   );
+  
 }
 
 const styles = StyleSheet.create({
@@ -59,11 +34,10 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     position: 'absolute',
-    top: Platform.OS === 'ios' ? 50 : 10, // iOS에서 상태바 아래로
+    top: Platform.OS === 'ios' ? 50 : 10,
     left: 0,
     right: 0,
     backgroundColor: 'transparent',
-    alignItems: 'center',
   },
   headerContent: {
     padding: 16,
@@ -76,6 +50,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     color: '#000',
+    
   },
   speedText: {
     marginLeft: 8,
@@ -87,6 +62,5 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    marginBottom: 49, // TabBar 높이만큼 여백
   },
 });

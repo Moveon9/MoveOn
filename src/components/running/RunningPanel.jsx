@@ -1,12 +1,27 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Animated, PanResponder } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Animated,
+  PanResponder,
+  Image,
+  Dimensions,
+} from 'react-native';
+import playIcon from '../../assets/image/main/ic_play.png';
+import pauseIcon from '../../assets/image/main/ic_pause.png';
+import stopIcon from '../../assets/image/main/ic_stop.png';
+
+const MAX_HEIGHT = 320;  // 패널 최대 높이
+const MIN_HEIGHT = 160;  // 패널 최소 높이
 
 export default function RunningPanel() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
   const [time, setTime] = useState(0);
-  
-  const panelHeight = useRef(new Animated.Value(100)).current;
+
+  const panelHeight = useRef(new Animated.Value(MIN_HEIGHT)).current;
   const timerRef = useRef(null);
 
   const formatTime = (seconds) => {
@@ -20,23 +35,26 @@ export default function RunningPanel() {
     onStartShouldSetPanResponder: () => true,
     onMoveShouldSetPanResponder: () => true,
     onPanResponderMove: (_, gestureState) => {
-      const newHeight = Math.max(100, Math.min(500 - gestureState.dy, 500));
+      const newHeight = Math.max(
+        MIN_HEIGHT,
+        Math.min(MAX_HEIGHT - gestureState.dy, MAX_HEIGHT)
+      );
       panelHeight.setValue(newHeight);
     },
     onPanResponderRelease: (_, gestureState) => {
       const shouldExpand = gestureState.dy < 0 || gestureState.vy < -0.5;
       setIsExpanded(shouldExpand);
       Animated.spring(panelHeight, {
-        toValue: shouldExpand ? 500 : 100,
+        toValue: shouldExpand ? MAX_HEIGHT : MIN_HEIGHT,
         useNativeDriver: false,
       }).start();
     },
   });
 
   const handleToggleExpand = () => {
-    setIsExpanded(!isExpanded);
+    setIsExpanded((prev) => !prev);
     Animated.spring(panelHeight, {
-      toValue: !isExpanded ? 500 : 100,
+      toValue: !isExpanded ? MAX_HEIGHT : MIN_HEIGHT,
       useNativeDriver: false,
     }).start();
   };
@@ -45,7 +63,7 @@ export default function RunningPanel() {
     if (!isRunning) {
       setIsRunning(true);
       timerRef.current = setInterval(() => {
-        setTime(prev => prev + 1);
+        setTime((prev) => prev + 1);
       }, 1000);
     }
   };
@@ -77,23 +95,23 @@ export default function RunningPanel() {
       </TouchableOpacity>
 
       <View style={styles.content} {...panResponder.panHandlers}>
-        <View style={styles.timeSection}>
-          <Text style={styles.timeLabel}>달린 시간 :</Text>
-          <Text style={styles.timeValue}>{formatTime(time)}</Text>
-        </View>
+        <View style={styles.timeRow}>
+          <View style={styles.timeTextBox}>
+            <Text style={styles.timeLabel}>달린 시간 :</Text>
+            <Text style={styles.timeValue}>{formatTime(time)}</Text>
+          </View>
 
-        <View style={styles.buttonContainer}>
           {!isRunning ? (
-            <TouchableOpacity style={styles.startButton} onPress={startTimer}>
-              <Text style={styles.buttonText}>▶</Text>
+            <TouchableOpacity onPress={startTimer} style={styles.iconButton}>
+              <Image source={playIcon} style={styles.iconImage} />
             </TouchableOpacity>
           ) : (
-            <View style={styles.controlButtons}>
-              <TouchableOpacity style={[styles.controlButton, { marginRight: 10 }]} onPress={pauseTimer}>
-                <Text style={styles.buttonText}>⏸</Text>
+            <View style={styles.controlGroup}>
+              <TouchableOpacity onPress={pauseTimer} style={styles.iconButton}>
+                <Image source={pauseIcon} style={styles.iconImage} />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.controlButton} onPress={stopTimer}>
-                <Text style={styles.buttonText}>⏹</Text>
+              <TouchableOpacity onPress={stopTimer} style={styles.iconButton}>
+                <Image source={stopIcon} style={styles.iconImage} />
               </TouchableOpacity>
             </View>
           )}
@@ -137,16 +155,14 @@ const styles = StyleSheet.create({
     bottom: 0,
     width: '100%',
     backgroundColor: '#fff',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
     elevation: 10,
     shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: -2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    overflow: 'hidden',
   },
   handleContainer: {
     paddingVertical: 12,
@@ -159,11 +175,16 @@ const styles = StyleSheet.create({
     borderRadius: 3,
   },
   content: {
-    flex: 1,
     padding: 16,
   },
-  timeSection: {
-    marginBottom: 20,
+  timeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 30,
+  },
+  timeTextBox: {
+    flexDirection: 'column',
   },
   timeLabel: {
     fontSize: 18,
@@ -174,44 +195,30 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#000',
   },
-  buttonContainer: {
-    alignItems: 'center',
-    marginTop: 10,
+  iconButton: {
+    marginLeft: 12,
   },
-  startButton: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: '#398342',
-    justifyContent: 'center',
-    alignItems: 'center',
+  iconImage: {
+    width: 56,
+    height: 56,
+    resizeMode: 'contain',
   },
-  controlButtons: {
+  controlGroup: {
     flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  controlButton: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: '#398342',
-    justifyContent: 'center',
     alignItems: 'center',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 24,
+    gap: 12,
   },
   statsContainer: {
     flexDirection: 'row',
-    marginTop: 30,
+    marginTop: 16,
     paddingHorizontal: 16,
+    paddingBottom: 0,
   },
   statsColumn: {
     flex: 1,
   },
   statItem: {
-    marginBottom: 20,
+    marginBottom: 16,
   },
   statLabel: {
     fontSize: 18,
@@ -224,7 +231,7 @@ const styles = StyleSheet.create({
   },
   divider: {
     width: 1,
-    backgroundColor: '#E0E0E0',
+    backgroundColor: '#D4D6DD',
     marginHorizontal: 16,
   },
 });
