@@ -16,10 +16,17 @@ import stopIcon from '../../assets/image/main/ic_stop.png';
 const MAX_HEIGHT = 320;  // 패널 최대 높이
 const MIN_HEIGHT = 160;  // 패널 최소 높이
 
-export default function RunningPanel() {
+export default function RunningPanel({
+  elapsedTime,
+  isPaused,
+  onPause,
+  onResume,
+  onStop,
+  filledGridCount,
+}) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isRunning, setIsRunning] = useState(false);
-  const [time, setTime] = useState(0);
+  //const [isRunning, setIsRunning] = useState(false);
+  //const [time, setTime] = useState(0);
 
   const panelHeight = useRef(new Animated.Value(MIN_HEIGHT)).current;
   const timerRef = useRef(null);
@@ -60,7 +67,7 @@ export default function RunningPanel() {
   };
 
   const startTimer = () => {
-    if (!isRunning) {
+    if (!isPaused && onResume) {
       setIsRunning(true);
       timerRef.current = setInterval(() => {
         setTime((prev) => prev + 1);
@@ -98,19 +105,24 @@ export default function RunningPanel() {
         <View style={styles.timeRow}>
           <View style={styles.timeTextBox}>
             <Text style={styles.timeLabel}>달린 시간 :</Text>
-            <Text style={styles.timeValue}>{formatTime(time)}</Text>
+            <Text style={styles.timeValue}>{formatTime(elapsedTime)}</Text>
           </View>
 
-          {!isRunning ? (
-            <TouchableOpacity onPress={startTimer} style={styles.iconButton}>
-              <Image source={playIcon} style={styles.iconImage} />
-            </TouchableOpacity>
-          ) : (
+          {!isPaused ? (
             <View style={styles.controlGroup}>
-              <TouchableOpacity onPress={pauseTimer} style={styles.iconButton}>
+              <TouchableOpacity onPress={onPause} style={styles.iconButton}>
                 <Image source={pauseIcon} style={styles.iconImage} />
               </TouchableOpacity>
-              <TouchableOpacity onPress={stopTimer} style={styles.iconButton}>
+              <TouchableOpacity onPress={onStop} style={styles.iconButton}>
+                <Image source={stopIcon} style={styles.iconImage} />
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <View style={styles.controlGroup}>
+              <TouchableOpacity onPress={onResume} style={styles.iconButton}>
+                <Image source={playIcon} style={styles.iconImage} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={onStop} style={styles.iconButton}>
                 <Image source={stopIcon} style={styles.iconImage} />
               </TouchableOpacity>
             </View>
@@ -126,7 +138,7 @@ export default function RunningPanel() {
               </View>
               <View style={styles.statItem}>
                 <Text style={styles.statLabel}>현재 칸의 수</Text>
-                <Text style={styles.statValue}>0</Text>
+                <Text style={styles.statValue}>{filledGridCount}</Text>
               </View>
             </View>
 

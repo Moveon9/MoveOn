@@ -1,13 +1,30 @@
 // pages/RunningPage.jsx
-import React from 'react';
+import React, { useState, useEffect, useRef }from 'react';
 import { View, StyleSheet, SafeAreaView, Platform, Text } from 'react-native';
 import MapView, { Polygon } from 'react-native-maps';
 import useVisitedGrid from '../components/running/utils/UseVisitedGrid';
 import RunningPanel from '../components/running/RunningPanel';
 
+
+
 export default function RunningPage({ route }) {
   const { region, currentSpeed } = route.params;
-  const polygonMap = useVisitedGrid(10); // 10m 격자
+  // pannel controll
+  const [isPaused, setIsPaused] = useState(false);
+  const [elapsedTime, setElapsedTime] = useState(0);
+  const timerRef = useRef(null);
+  const polygonMap = useVisitedGrid(10, isPaused); // 10m 격자
+
+  useEffect(() => {
+    if (!isPaused){
+      timerRef.current = setInterval(() =>{
+        setElapsedTime(prev => prev + 1);
+      }, 1000)
+    } else {
+      clearInterval(timerRef.current);
+    }
+    return () => clearInterval(timerRef.current)
+  }, [isPaused]);
 
   return (
     <View style={styles.container}>
@@ -34,7 +51,17 @@ export default function RunningPage({ route }) {
         </View>
       </SafeAreaView>
 
-      <RunningPanel />
+      <RunningPanel 
+        elapsedTime={elapsedTime}
+        isPaused={isPaused}
+        onPause={() => setIsPaused(true)}
+        onResume={() => setIsPaused(false)}
+        onStop={() => {
+          setIsPaused(true);
+          setElapsedTime(0);
+        }}
+        filledGridCount={Object.keys(polygonMap).length}
+      />
     </View>
   );
 }

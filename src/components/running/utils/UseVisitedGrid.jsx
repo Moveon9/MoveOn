@@ -5,12 +5,20 @@ const meterToLatDegree = (meter) => meter / 111000;
 // 경도 delta는 초기 위치에서 한번만 계산
 const meterToLngDegree = (meter, lat) => meter / (111000 * Math.cos(lat * Math.PI / 180));
 
-export default function useVisitedGrid(meter = 50) {
+export default function useVisitedGrid(meter = 50, isPaused = false) {
   const [polygonMap, setPolygonMap] = useState({});
   const gridSizeRef = useRef({ deltaLat: null, deltaLng: null });
   const watchId = useRef(null);
 
   useEffect(() => {
+    if (isPaused) {
+      if (watchId.current !== null) {
+        Geolocation.clearWatch(watchId.current);
+        watchId.current = null;
+      }
+      return;
+  }
+
     watchId.current = Geolocation.watchPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
@@ -58,7 +66,7 @@ export default function useVisitedGrid(meter = 50) {
         Geolocation.clearWatch(watchId.current);
       }
     };
-  }, [meter]);
+  }, [isPaused]);
 
   return polygonMap;
 }
