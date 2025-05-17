@@ -1,114 +1,189 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, SafeAreaView, StyleSheet, Image } from 'react-native';
+import axios from 'axios';
 
-export default function UserInfoPage1({ navigation }) {
-  const [name, setName] = useState('');
-  const [weight, setWeight] = useState('');
-  const [gender, setGender] = useState('');
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  SafeAreaView,
+} from 'react-native';
 
-  const handleNext = () => {
-    if (!name.trim()) {
-        alert('이름을 입력해주세요.');
-        return;
+export default function UserInfo1({ navigation }) {
+  const [nickname, setNickname] = useState('');
+  const [password, setPassword] = useState('');
+  const [nicknameError, setNicknameError] = useState('');
+  const [isChecked, setIsChecked] = useState(false);
+
+  const [nicknameFocused, setNicknameFocused] = useState(false);
+  const [passwordFocused, setPasswordFocused] = useState(false);
+
+  const checkNickname = () => {
+    if (nickname === '무한이') {
+      setNicknameError('*닉네임이 중복입니다.');
+      setIsChecked(false);
+    } else {
+      setNicknameError('');
+      setIsChecked(true);
     }
-    
-    if (!weight.trim()) {
-        alert('몸무게를 입력해주세요.');
-        return;
-    }
-    
-    if (!gender) {
-        alert('성별을 선택해주세요.');
-        return;
-    }
-    navigation.navigate('UserInfo2', { name, weight, gender });
   };
 
+  const handleNext = () => {
+    if (nickname && password && isChecked) {
+      navigation.navigate('UserInfo2'); // 다음 페이지로 이동
+    }
+  };
+
+  const isNextEnabled = nickname && password && isChecked;
+
   return (
-    <SafeAreaView style={styles.safeareaview}>
-        <View style={styles.container}>
-        <Image source={require('../../assets/image/common/LogRabbit.png')} style={styles.image} />
-
-        <Text style={styles.label}>이름</Text>
-        <TextInput
-            style={styles.input}
-            placeholder="이름을 입력하세요"
-            value={name}
-            onChangeText={setName}
-        />
-
-        <Text style={styles.label}>몸무게</Text>
-        <TextInput
-            style={styles.input}
-            placeholder="ex) 56"
-            keyboardType="numeric"
-            value={weight}
-            onChangeText={setWeight}
-        />
-
-        <Text style={styles.label}>성별</Text>
-        <View style={styles.genderContainer}>
-            <TouchableOpacity
-            style={[styles.genderBtn, gender === '남성' && styles.genderSelected]}
-            onPress={() => setGender('남성')}
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+        {/* 헤더 */}
+        <View style={styles.header}>
+          <TouchableOpacity onPress={handleNext} disabled={!isNextEnabled}>
+            <Text
+              style={[
+                styles.nextText,
+                !isNextEnabled && styles.nextTextDisabled,
+              ]}
             >
-            <Text>남성</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-            style={[styles.genderBtn, gender === '여성' && styles.genderSelected]}
-            onPress={() => setGender('여성')}
-            >
-            <Text>여성</Text>
-            </TouchableOpacity>
+              다음
+            </Text>
+          </TouchableOpacity>
         </View>
 
-        <TouchableOpacity style={styles.nextBtn} onPress={handleNext}>
-            <Text style={{ color: 'white' }}>다음</Text>
-        </TouchableOpacity>
+        {/* 이미지 */}
+        <Image
+          source={require('../../assets/image/common/LogRabbit.png')}
+          style={styles.image}
+        />
+
+        {/* 닉네임 */}
+        <Text style={styles.label}>닉네임</Text>
+        <View
+          style={[
+            styles.inputRow,
+            nicknameError && styles.inputRowError,
+            nicknameFocused && styles.inputFocused,
+          ]}
+        >
+          <TextInput
+            style={styles.input}
+            placeholder="닉네임"
+            value={nickname}
+            onChangeText={(text) => {
+              setNickname(text);
+              setIsChecked(false); // 닉네임 수정 시 검사 무효화
+            }}
+            onFocus={() => setNicknameFocused(true)}
+            onBlur={() => setNicknameFocused(false)}
+          />
+          <TouchableOpacity style={styles.checkButton} onPress={checkNickname}>
+            <Text style={styles.checkButtonText}>중복 검사</Text>
+          </TouchableOpacity>
         </View>
+        {nicknameError ? (
+          <Text style={styles.errorText}>{nicknameError}</Text>
+        ) : null}
+
+        {/* 비밀번호 */}
+        <Text style={styles.label}>비밀번호</Text>
+        <View
+          style={[
+            styles.inputRow,
+            passwordFocused && styles.inputFocused,
+          ]}
+        >
+          <TextInput
+            style={styles.input}
+            placeholder="비밀번호"
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
+            onFocus={() => setPasswordFocused(true)}
+            onBlur={() => setPasswordFocused(false)}
+          />
+        </View>
+      </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 24, flex: 1, backgroundColor: 'white' },
-  image: { width: 100, height: 100, alignSelf: 'center', marginBottom: 20 },
-  label: { fontWeight: 'bold', marginTop: 10 },
-  input: {
-    borderWidth: 1,
-    borderColor: '#999',
-    borderRadius: 6,
-    padding: 10,
-    marginTop: 4,
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#fff',
   },
-  genderContainer: {
+  container: {
+    flex: 1,
+    padding: 24,
+    paddingHorizontal: 30,
+    backgroundColor: '#fff',
+  },
+  header: {
+    alignItems: 'flex-end',
+    marginBottom: 12,
+  },
+  nextText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#398342',
+  },
+  nextTextDisabled: {
+    color: '#ccc',
+  },
+  image: {
+    width: 200,
+    height: 200,
+    alignSelf: 'center',
+    resizeMode: 'contain',
+    marginVertical: 16,
+  },
+  label: {
+    marginTop: 12,
+    marginBottom: 4,
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#000',
+  },
+  inputRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 10,
-  },
-  genderBtn: {
-    flex: 1,
-    padding: 10,
-    borderWidth: 1,
+    alignItems: 'center',
     borderColor: '#ccc',
-    alignItems: 'center',
-    borderRadius: 6,
-    marginHorizontal: 5,
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    marginBottom: 8,
   },
-  genderSelected: {
-    backgroundColor: '#d0e8d0',
+  inputRowError: {
+    borderColor: '#E53935',
   },
-  nextBtn: {
-    marginTop: 20,
-    backgroundColor: '#3c6e47',
-    padding: 14,
-    alignItems: 'center',
-    borderRadius: 6,
+  inputFocused: {
+    borderColor: '#398342',
   },
-  safeareaview: {
+  input: {
     flex: 1,
-    height: 776,
-    width: "100%",
-    backgroundColor: "#fff"
-    }, 
+    height: 48,
+    fontSize: 14,
+    paddingHorizontal: 8,
+  },
+  checkButton: {
+    backgroundColor: '#398342',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 6,
+  },
+  checkButtonText: {
+    color: '#fff',
+    fontSize: 15,
+  },
+  errorText: {
+    color: '#E53935',
+    fontSize: 12,
+    marginBottom: 8,
+    marginLeft: 4,
+  },
 });

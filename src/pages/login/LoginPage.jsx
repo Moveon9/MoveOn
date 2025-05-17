@@ -1,31 +1,51 @@
-// pages/LoginPage.jsx
-import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
-import KakaoLoginButton from '../../components/auth/KakaoLoginButton'; // 아래 컴포넌트 참조
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
 
 export default function LoginPage({ navigation }) {
-  //const handleLoginSuccess = (profile) => {
-  //  navigation.replace('MainTabs', { user: profile });
-  //};
-  const handleKakaoLogin = () => {
-    // ⚠️ 실제 로그인 구현 전까지는 아래 코드로 우선 이동 처리
-    navigation.navigate('UserInfo1');
+  const [nickname, setNickname] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = () => {
+    // 로그인 처리 로직 (예: 서버 요청 등)
+    navigation.replace('MainTabs'); // 로그인 성공 시 메인으로 이동
   };
 
   return (
     <View style={styles.container}>
-      {/* 로고 이미지 */}
+      {/* 상단 이미지 */}
       <Image
-        source={require('../../assets/image/auth/logo.png')} // 로고 이미지 경로 확인
-        style={styles.logo}
+        source={require('../../assets/image/common/LogRabbit.png')}
+        style={styles.image}
       />
 
-      <Text style={styles.subtitle}>
-        땅따먹기와 함께하는{'\n'}
-        <Text style={{ fontWeight: 'bold' }}>즐거운 움직임</Text>
-      </Text>
+      {/* 닉네임 입력 */}
+      <TextInput
+        style={[styles.input, nickname && styles.inputActive]}
+        placeholder="닉네임"
+        value={nickname}
+        onChangeText={setNickname}
+      />
 
-      <KakaoLoginButton onLoginSuccess={handleKakaoLogin} />
+      {/* 비밀번호 입력 */}
+      <TextInput
+        style={styles.input}
+        placeholder="비밀번호"
+        secureTextEntry
+        value={password}
+        onChangeText={setPassword}
+      />
+
+      {/* 로그인 버튼 */}
+      <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+        <Text style={styles.loginButtonText}>로그인</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -33,26 +53,48 @@ export default function LoginPage({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingHorizontal: 32,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',
-    paddingHorizontal: 30,
   },
-  logo: {
-    width: 100,
-    height: 100,
-    marginBottom: 8,
+  image: {
+    width: 180,
+    height: 180,
     resizeMode: 'contain',
+    marginBottom: 24,
   },
-  title: {
-    fontSize: 18,
-    color: '#234123',
-    marginBottom: 20,
-  },
-  subtitle: {
-    fontSize: 16,
-    textAlign: 'center',
-    marginBottom: 40,
+  label: {
+    alignSelf: 'flex-start',
+    marginLeft: 8,
+    fontSize: 14,
     color: '#000',
+    marginBottom: 4,
+  },
+  input: {
+    width: '100%',
+    height: 48,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    paddingHorizontal: 12,
+    marginBottom: 16,
+    fontSize: 14,
+  },
+  inputActive: {
+    borderColor: '#398342',
+  },
+  loginButton: {
+    backgroundColor: '#398342',
+    width: '100%',
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  loginButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });

@@ -5,7 +5,7 @@ export default function InvitationAlert({ nickname = '홍길동' }) {
   return (
     <View style={styles.alertContainer}>
       <Image
-        source={require('../../assets/icons/bell.png')} // 알림 아이콘 경로에 맞게 수정하세요
+        source={require('../../assets/groundchallenge/ic_alert.png')} // 알림 아이콘 경로에 맞게 수정하세요
         style={styles.bellIcon}
       />
       <Text style={styles.message}>

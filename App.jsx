@@ -13,6 +13,11 @@ import RunningPage from './src/pages/RunningPage';
 import MainUI from './src/components/main/MainUI';
 import { PointProvider } from './src/context/PointContext';
 import GameInvitationPage from './src/pages/groundchallenge/GameInvitationPage';
+import Join from './src/pages/login/Join'
+import UserInfo1 from './src/pages/login/UserInfo1';
+import UserInfo2 from './src/pages/login/UserInfo2';
+import LoginPage from './src/pages/login/LoginPage'
+import UserInfoComplete from './src/pages/login/UserInfoComplete';
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -24,11 +29,32 @@ const [showInviteScreen, setShowInviteScreen] = useState(false);
       <SafeAreaProvider>
         <NavigationContainer>
           <Stack.Navigator
+            initialRouteName='Join'
             screenOptions={{
               headerShown: false,
               gestureEnabled: true
             }}
           >
+            <Stack.Screen
+              name="Join"
+              component={Join}
+            />
+
+            <Stack.Screen 
+            name="LoginPage" 
+            component={LoginPage} />
+
+            <Stack.Screen 
+            name="UserInfo1" 
+            component={UserInfo1} />
+
+            <Stack.Screen 
+            name="UserInfo2" 
+            component={UserInfo2} />
+
+            <Stack.Screen
+              name="UserInfoComplete"
+              component={UserInfoComplete} />
 
             <Stack.Screen
               name="MainTabs"
@@ -82,6 +108,8 @@ const [showInviteScreen, setShowInviteScreen] = useState(false);
               name="GameInvitationPage"
               component={GameInvitationPage}
             />
+
+            
 
 
           </Stack.Navigator>
