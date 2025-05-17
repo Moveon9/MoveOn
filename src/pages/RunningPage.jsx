@@ -1,37 +1,46 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, Platform } from 'react-native';
-import Geolocation from '@react-native-community/geolocation';
-import MapViewComponent from '../components/map/MapViewComponent';
+// pages/RunningPage.jsx
+import React from 'react';
+import { View, StyleSheet, SafeAreaView, Platform, Text } from 'react-native';
+import MapView, { Polygon } from 'react-native-maps';
+import useVisitedGrid from '../components/running/utils/UseVisitedGrid';
 import RunningPanel from '../components/running/RunningPanel';
 
 export default function RunningPage({ route }) {
   const { region, currentSpeed } = route.params;
+  const polygonMap = useVisitedGrid(10); // 10m 격자
 
   return (
     <View style={styles.container}>
-      <MapViewComponent region={region} onRegionChange={() => {}} />
-  
-      {/* 상단 정보 */}
-      <SafeAreaView style={styles.headerContainer} edges={['top']}>
+      <MapView
+        style={StyleSheet.absoluteFillObject}
+        showsUserLocation
+        region={region}
+      >
+        {Object.entries(polygonMap).map(([key, coords]) => (
+          <Polygon
+            key={key}
+            coordinates={coords}
+            fillColor="rgba(52, 168, 83, 0.3)"
+            strokeColor="rgba(52, 168, 83, 0.8)"
+            strokeWidth={1}
+          />
+        ))}
+      </MapView>
+
+      <SafeAreaView style={styles.headerContainer}>
         <View style={styles.headerContent}>
-          <View style={styles.titleContainer}>
-            <Text style={styles.title}>오늘 기록</Text>
-            <Text style={styles.speedText}>{currentSpeed} km/h</Text>
-          </View>
+          <Text style={styles.title}>오늘 기록</Text>
+          <Text style={styles.speedText}>{currentSpeed} km/h</Text>
         </View>
       </SafeAreaView>
-  
-      {/* 바로 RunningPanel 배치 */}
+
       <RunningPanel />
     </View>
   );
-  
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
+  container: { flex: 1 },
   headerContainer: {
     position: 'absolute',
     top: Platform.OS === 'ios' ? 50 : 10,
@@ -42,25 +51,14 @@ const styles = StyleSheet.create({
   headerContent: {
     padding: 16,
   },
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#000',
-    
   },
   speedText: {
-    marginLeft: 8,
     fontSize: 14,
+    marginLeft: 8,
     color: '#4CAF50',
-  },
-  contentContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
   },
 });
