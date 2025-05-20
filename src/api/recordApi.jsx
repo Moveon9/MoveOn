@@ -1,7 +1,6 @@
-// src/api/record.js
 import axios from 'axios';
 
-const API_URL = 'http://54.79.175.116/api/steps'; // 실제 엔드포인트로 변경하세요
+const API_URL = 'url'; 
 
 export const saveRunRecord = async ({
   date,
