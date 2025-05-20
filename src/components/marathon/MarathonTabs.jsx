@@ -7,7 +7,8 @@ import MarathonRankingPage from '../../pages/marathon/MarathonRanking';
 
 const Tab = createMaterialTopTabNavigator();
 
-export default function MarathonTabs() {
+export default function MarathonTabs({ route }) {
+  const { marathon } = route.params;
   return (
     <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}> {/* ✅ SafeArea 적용 */}
       <View style={styles.container}>
@@ -19,7 +20,11 @@ export default function MarathonTabs() {
             tabBarIndicatorStyle: { backgroundColor: '#398342', height: 2 },
           }}
         >
-          <Tab.Screen name="챌린지" component={MarathonInfoPage} />
+          <Tab.Screen 
+            name="챌린지" 
+            component={MarathonInfoPage}
+            initialParams={{ marathon }} 
+            />
           <Tab.Screen name="마라톤 랭킹" component={MarathonRankingPage} />
         </Tab.Navigator>
       </View>

@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import {
   View,
@@ -9,7 +10,10 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-export default function MarathonInfoPage() {
+
+export default function MarathonInfoPage({ route }) {
+  const { marathon } = route.params;
+  const navigation = useNavigation();
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={{flex:1}}>
@@ -21,15 +25,15 @@ export default function MarathonInfoPage() {
 
           {/* 카드 박스 */}
           <View style={styles.cardSection}>
-            <Text style={styles.title}>여의도 한강 공원</Text>
+            <Text style={styles.title}>{marathon.title}</Text>
             <View style={styles.infoRow}>
               <View style={styles.infoBox}>
                 <Text style={styles.label}>지역</Text>
-                <Text style={styles.value}>서울</Text>
+                <Text style={styles.value}>{marathon.location}</Text>
               </View>
               <View style={styles.infoBox}>
                 <Text style={styles.label}>거리</Text>
-                <Text style={styles.value}>10km</Text>
+                <Text style={styles.value}>{marathon.distance}</Text>
               </View>
               <View style={styles.infoBox}>
                 <Text style={styles.label}>1등 보상</Text>
@@ -43,7 +47,7 @@ export default function MarathonInfoPage() {
             <View style={styles.detailRow}>
               <Image source={require('../../assets/image/marathon/ic_location.png')} style={styles.icon} />
               <Text style={styles.detailLabel}>출발 위치</Text>
-              <Text style={styles.detailText}>서울특별시 영등포구 여의동로 330</Text>
+              <Text style={styles.detailText}>{marathon.detailed_location}</Text>
             </View>
 
             <View style={styles.spacer} />
@@ -51,7 +55,7 @@ export default function MarathonInfoPage() {
             <View style={styles.detailRow}>
               <Image source={require('../../assets/image/marathon/ic_date.png')} style={styles.icon} />
               <Text style={styles.detailLabel}>기간</Text>
-              <Text style={styles.detailText}>2025. 01. 26 ~ 2025. 02. 01</Text>
+              <Text style={styles.detailText}>{marathon.date}</Text>
             </View>
 
             <View style={styles.spacer} />
@@ -100,7 +104,8 @@ export default function MarathonInfoPage() {
         </ScrollView>
 
         {/* 하단 고정 버튼 */}
-        <TouchableOpacity style={styles.challengeButton}>
+        <TouchableOpacity style={styles.challengeButton}
+          onPress={() => navigation.navigate('MarathonCoursePage', { courseCoordinates: marathon.courseCoordinates})}>
           <Text style={styles.challengeButtonText}>지금 도전!</Text>
         </TouchableOpacity>
       </View>
