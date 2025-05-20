@@ -1,5 +1,7 @@
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
+import PointContext from '../context/PointContext';
+import { useContext } from 'react';
 
 
 import {
@@ -14,6 +16,8 @@ import {
 
 const MyPage = () => {
   const navigation = useNavigation();
+  const { point, setPoint } = useContext(PointContext);
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView style={styles.container}>
@@ -37,13 +41,13 @@ const MyPage = () => {
                   style={styles.arrowIcon}
                 />
               </View>
-              <View style={styles.pointRow}>
-                <Image
-                  source={require('../assets/image/mypage/ic_Point.png')}
-                  style={styles.pointIcon}
-                />
-                <Text style={styles.pointText}>300</Text>
-              </View>
+            <View style={styles.pointRow}>
+              <Image
+                source={require('../assets/image/mypage/ic_Point.png')}
+                style={styles.pointIcon}
+              />
+              <Text style={styles.pointText}>{point}</Text>
+            </View>
             </View>
           </View>
 
