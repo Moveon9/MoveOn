@@ -2,8 +2,8 @@
 import React, { useState, useEffect, useRef }from 'react';
 import { View, StyleSheet, SafeAreaView, Platform, Text } from 'react-native';
 import MapView, { Polygon } from 'react-native-maps';
-import useVisitedGrid from '../components/running/utils/UseVisitedGrid';
-import RunningPanel from '../components/running/RunningPanel';
+import useVisitedGrid from '../../components/running/utils/UseVisitedGrid';
+import RunningPanel from '../../components/running/RunningPanel';
 
 
 

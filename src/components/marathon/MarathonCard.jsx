@@ -1,19 +1,19 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 
-export default function MarathonCard() {
+export default function MarathonCard({title, location, detailed_location, distance, date, image}) {
   return (
     <View style={styles.cardSection}>
       <View style={styles.cardRow}>
         <Image
-          source={require('../../assets/image/marathon/MarathonSampleImg.png')}
+          source={image}
           style={styles.image}
         />
         <View style={styles.infoSection}>
-          <Text style={styles.location}>서울특별시 영등포구</Text>
-          <Text style={styles.title}>여의도 한강 공원</Text>
-          <Text style={styles.distance}>10km</Text>
-          <Text style={styles.date}>2025. 01. 26 ~ 2025. 02. 01</Text>
+          <Text style={styles.location}>{detailed_location}</Text>
+          <Text style={styles.title}>{title}</Text>
+          <Text style={styles.distance}>{distance}</Text>
+          <Text style={styles.date}>{date}</Text>
         </View>
       </View>
       <View style={styles.divider} />

@@ -8,6 +8,8 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Nav from './src/components/Nav';
 import MarathonListPage from './src/pages/marathon/MarathonListPage';
 import MarathonInfoPage from './src/pages/marathon/MarathonInfoPage';
+import MarathonCoursePage from './src/pages/marathon/MarathonCoursePage'
+import CountdownScreen_marathon from './src/pages/marathon/CountdownScreen_marathon';
 import MarathonTabs from './src/components/marathon/MarathonTabs';
 import CountdownScreen from './src/pages/countdown/CountdownScreen';
 import RunningPage from './src/pages/RunningPage';
@@ -58,13 +60,25 @@ export default function App() {
               name="MarathonInfoPage"
               component={MarathonInfoPage}
             />
+            
 
             <Stack.Screen
             name="MarathonTabs"
             component={MarathonTabs}
             options={{ headerShown: false }}
           />
-
+            <Stack.Screen
+              name="MarathonCoursePage"
+              component={MarathonCoursePage}
+            />
+            <Stack.Screen
+              name="Countdown_marathon"
+              component={CountdownScreen_marathon}
+              options={{
+                gestureEnabled: false,
+                presentation: 'fullScreenModal',
+              }}
+            />
 
             <Stack.Screen
               name="Countdown"
