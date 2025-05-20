@@ -11,7 +11,7 @@ import MarathonCoursePage from './src/pages/marathon/MarathonCoursePage'
 import CountdownScreen_marathon from './src/pages/marathon/CountdownScreen_marathon';
 import MarathonTabs from './src/components/marathon/MarathonTabs';
 import CountdownScreen from './src/pages/countdown/CountdownScreen';
-import RunningPage from './src/pages/RunningPage';
+import RunningPage from './src/pages/running/RunningPage';
 import MainUI from './src/components/main/MainUI';
 import { PointProvider } from './src/context/PointContext';
 import GameInvitationPage from './src/pages/groundchallenge/GameInvitationPage';
@@ -20,6 +20,7 @@ import UserInfo1 from './src/pages/login/UserInfo1';
 import UserInfo2 from './src/pages/login/UserInfo2';
 import LoginPage from './src/pages/login/LoginPage'
 import UserInfoComplete from './src/pages/login/UserInfoComplete';
+import RecordPage from './src/pages/running/RecordPage'
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -114,6 +115,10 @@ const [showInviteScreen, setShowInviteScreen] = useState(false);
                 gestureEnabled: false,
                 animation: 'none',
               }}
+            />
+            <Stack.Screen
+              name="RecordPage"
+              component={RecordPage}
             />
 
             <Stack.Screen name="MainUI" 
