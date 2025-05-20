@@ -1,38 +1,39 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-
 import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  Image,
-  SafeAreaView,
+  View, Text, TextInput, TouchableOpacity, StyleSheet,
+  Image, SafeAreaView,
 } from 'react-native';
+import { checkNicknameQuery } from '../../api/nicknameApi';
 
 export default function UserInfo1({ navigation }) {
   const [nickname, setNickname] = useState('');
   const [password, setPassword] = useState('');
   const [nicknameError, setNicknameError] = useState('');
   const [isChecked, setIsChecked] = useState(false);
-
   const [nicknameFocused, setNicknameFocused] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
 
-  const checkNickname = () => {
-    if (nickname === '무한이') {
-      setNicknameError('*닉네임이 중복입니다.');
+  const checkNickname = async () => {
+    if (!nickname.trim()) return;
+
+    try {
+      const isDuplicated = await checkNicknameQuery(nickname.trim());
+      if (isDuplicated) {
+        setNicknameError('*닉네임이 중복입니다.');
+        setIsChecked(false);
+      } else {
+        setNicknameError('');
+        setIsChecked(true);
+      }
+    } catch (err) {
+      setNicknameError('닉네임 확인 실패');
       setIsChecked(false);
-    } else {
-      setNicknameError('');
-      setIsChecked(true);
     }
   };
 
   const handleNext = () => {
     if (nickname && password && isChecked) {
-      navigation.navigate('UserInfo2'); // 다음 페이지로 이동
+      navigation.navigate('UserInfo2', {nickname,password,})
     }
   };
 
@@ -41,42 +42,32 @@ export default function UserInfo1({ navigation }) {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        {/* 헤더 */}
         <View style={styles.header}>
           <TouchableOpacity onPress={handleNext} disabled={!isNextEnabled}>
-            <Text
-              style={[
-                styles.nextText,
-                !isNextEnabled && styles.nextTextDisabled,
-              ]}
-            >
+            <Text style={[styles.nextText, !isNextEnabled && styles.nextTextDisabled]}>
               다음
             </Text>
           </TouchableOpacity>
         </View>
 
-        {/* 이미지 */}
         <Image
           source={require('../../assets/image/common/LogRabbit.png')}
           style={styles.image}
         />
 
-        {/* 닉네임 */}
         <Text style={styles.label}>닉네임</Text>
-        <View
-          style={[
-            styles.inputRow,
-            nicknameError && styles.inputRowError,
-            nicknameFocused && styles.inputFocused,
-          ]}
-        >
+        <View style={[
+          styles.inputRow,
+          nicknameError && styles.inputRowError,
+          nicknameFocused && styles.inputFocused
+        ]}>
           <TextInput
             style={styles.input}
             placeholder="닉네임"
             value={nickname}
             onChangeText={(text) => {
               setNickname(text);
-              setIsChecked(false); // 닉네임 수정 시 검사 무효화
+              setIsChecked(false);
             }}
             onFocus={() => setNicknameFocused(true)}
             onBlur={() => setNicknameFocused(false)}
@@ -85,18 +76,13 @@ export default function UserInfo1({ navigation }) {
             <Text style={styles.checkButtonText}>중복 검사</Text>
           </TouchableOpacity>
         </View>
-        {nicknameError ? (
-          <Text style={styles.errorText}>{nicknameError}</Text>
-        ) : null}
+        {nicknameError ? <Text style={styles.errorText}>{nicknameError}</Text> : null}
 
-        {/* 비밀번호 */}
         <Text style={styles.label}>비밀번호</Text>
-        <View
-          style={[
-            styles.inputRow,
-            passwordFocused && styles.inputFocused,
-          ]}
-        >
+        <View style={[
+          styles.inputRow,
+          passwordFocused && styles.inputFocused
+        ]}>
           <TextInput
             style={styles.input}
             placeholder="비밀번호"
@@ -111,6 +97,7 @@ export default function UserInfo1({ navigation }) {
     </SafeAreaView>
   );
 }
+
 
 const styles = StyleSheet.create({
   safeArea: {

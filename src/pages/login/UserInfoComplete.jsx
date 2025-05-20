@@ -7,10 +7,24 @@ import {
   SafeAreaView,
   TouchableOpacity,
 } from 'react-native';
+import { registerUser } from '../../api/userApi'; // 위에서 만든 API 함수 import
 
-export default function UserInfoComplete({ navigation }) {
-  const handleStart = () => {
-    navigation.replace('MainTabs'); // 메인 페이지로 이동
+export default function UserInfoComplete({ navigation, route }) {
+  const { nickname, password, weight, preferredTime, gender } = route.params; // 이전 페이지에서 넘긴 값
+
+  const handleStart = async () => {
+    try {
+      await registerUser({
+        nickname,
+        password,
+        weight,
+        preferredTime,
+        gender: gender.toUpperCase(), // API가 'MALE', 'FEMALE'을 요구하면
+      });
+      navigation.replace('MainTabs');
+    } catch (error) {
+      alert('회원가입에 실패했습니다.');
+    }
   };
 
   return (

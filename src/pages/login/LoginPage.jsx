@@ -6,55 +6,68 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
+  Alert,
+  SafeAreaView,
 } from 'react-native';
+import { loginUser } from '../../api/userApi'; // 로그인 API 함수 import
 
 export default function LoginPage({ navigation }) {
   const [nickname, setNickname] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = () => {
-    // 로그인 처리 로직 (예: 서버 요청 등)
-    navigation.replace('MainTabs'); // 로그인 성공 시 메인으로 이동
+  const handleLogin = async () => {
+    try {
+      const res = await loginUser({ nickname, password });
+      if (res.isSuccess && res.result === true) {
+        navigation.replace('MainTabs');
+      } else {
+        Alert.alert('로그인 실패', res.message || '닉네임 또는 비밀번호를 확인하세요');
+      }
+    } catch (err) {
+      Alert.alert('오류', '로그인 중 오류가 발생했습니다.');
+    }
   };
 
   return (
-    <View style={styles.container}>
-      {/* 상단 이미지 */}
-      <Image
-        source={require('../../assets/image/common/LogRabbit.png')}
-        style={styles.image}
-      />
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+        <Image
+          source={require('../../assets/image/common/LogRabbit.png')}
+          style={styles.image}
+        />
 
-      {/* 닉네임 입력 */}
-      <TextInput
-        style={[styles.input, nickname && styles.inputActive]}
-        placeholder="닉네임"
-        value={nickname}
-        onChangeText={setNickname}
-      />
+        <TextInput
+          style={[styles.input, nickname && styles.inputActive]}
+          placeholder="닉네임"
+          value={nickname}
+          onChangeText={setNickname}
+        />
 
-      {/* 비밀번호 입력 */}
-      <TextInput
-        style={styles.input}
-        placeholder="비밀번호"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
+        <TextInput
+          style={styles.input}
+          placeholder="비밀번호"
+          secureTextEntry
+          value={password}
+          onChangeText={setPassword}
+        />
 
-      {/* 로그인 버튼 */}
-      <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-        <Text style={styles.loginButtonText}>로그인</Text>
-      </TouchableOpacity>
-    </View>
+        <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+          <Text style={styles.loginButtonText}>로그인</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
   container: {
     flex: 1,
     paddingHorizontal: 32,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     backgroundColor: '#fff',
   },

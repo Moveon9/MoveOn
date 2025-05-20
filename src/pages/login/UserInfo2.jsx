@@ -10,25 +10,32 @@ import {
 } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 
-export default function UserInfo2({ navigation }) {
+export default function UserInfo2({ navigation, route }) {
   const [weight, setWeight] = useState('');
   const [gender, setGender] = useState('');
   const [timeOpen, setTimeOpen] = useState(false);
-  const [selectedTime, setSelectedTime] = useState(null);
+  const [preferredTime, setpreferredTime] = useState(null);
   const [weightFocused, setWeightFocused] = useState(false);
   const [timeItems, setTimeItems] = useState([
-    { label: '1시간 이하', value: 'under_1h' },
-    { label: '1-2시간', value: '1_2h' },
-    { label: '2-3시간', value: '2_3h' },
-    { label: '3-4시간', value: '3_4h' },
-    { label: '4시간 이상', value: 'over_4h' },
+    { label: '1시간 이하', value: 'LESS1' },
+    { label: '1-2시간', value: 'LESS2' },
+    { label: '2-3시간', value: 'LESS3' },
+    { label: '3-4시간', value: 'LESS4' },
+    { label: '4시간 이상', value: 'MORE4' },
   ]);
 
   const handleNext = () => {
-    if (weight && selectedTime && gender) {
-      navigation.navigate('UserInfoComplete');
+    if (weight && preferredTime && gender) {
+      navigation.navigate('UserInfoComplete', {
+        nickname: route.params.nickname,
+        password: route.params.password,
+        weight,
+        preferredTime,
+        gender,
+      });
     }
   };
+
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -37,12 +44,12 @@ export default function UserInfo2({ navigation }) {
         <View style={styles.header}>
           <TouchableOpacity
             onPress={handleNext}
-            disabled={!weight || !selectedTime || !gender}
+            disabled={!weight || !preferredTime || !gender}
           >
             <Text
               style={[
                 styles.nextText,
-                (!weight || !selectedTime || !gender) && styles.nextTextDisabled,
+                (!weight || !preferredTime || !gender) && styles.nextTextDisabled,
               ]}
             >
               다음
@@ -73,10 +80,10 @@ export default function UserInfo2({ navigation }) {
         <View style={{ zIndex: 1000 }}>
           <DropDownPicker
             open={timeOpen}
-            value={selectedTime}
+            value={preferredTime}
             items={timeItems}
             setOpen={setTimeOpen}
-            setValue={setSelectedTime}
+            setValue={setpreferredTime}
             setItems={setTimeItems}
             placeholder="시간을 선택해주세요"
             style={[styles.dropdown, timeOpen && styles.inputFocused]}
@@ -91,22 +98,22 @@ export default function UserInfo2({ navigation }) {
           <TouchableOpacity
             style={[
               styles.genderButton,
-              gender === 'male' && styles.genderSelected,
+              gender === 'MALE' && styles.genderSelected,
             ]}
-            onPress={() => setGender('male')}
+            onPress={() => setGender('MALE')}
           >
-            <Text style={gender === 'male' ? styles.genderTextSelected : styles.genderText}>
+            <Text style={gender === 'MALE' ? styles.genderTextSelected : styles.genderText}>
               남성
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[
               styles.genderButton,
-              gender === 'female' && styles.genderSelected,
+              gender === 'FEMALE' && styles.genderSelected,
             ]}
-            onPress={() => setGender('female')}
+            onPress={() => setGender('FEMALE')}
           >
-            <Text style={gender === 'female' ? styles.genderTextSelected : styles.genderText}>
+            <Text style={gender === 'FEMALE' ? styles.genderTextSelected : styles.genderText}>
               여성
             </Text>
           </TouchableOpacity>
