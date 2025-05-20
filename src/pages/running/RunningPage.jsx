@@ -11,11 +11,13 @@ import ViewShot, { captureRef } from "react-native-view-shot";
 export default function RunningPage({ route }) {
   const { region, currentSpeed } = route.params;
   const navigation = useNavigation();
+
   // pannel controll
   const [isPaused, setIsPaused] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
   const timerRef = useRef(null);
   const polygonMap = useVisitedGrid(10, isPaused); // 10m 격자
+
 
   // map capture
   const viewShotRef = useRef();
@@ -30,6 +32,7 @@ export default function RunningPage({ route }) {
     }
     return () => clearInterval(timerRef.current)
   }, [isPaused]);
+
 
   const handleStopAndNavigate = async () => {
     setIsPaused(true);
@@ -80,10 +83,12 @@ export default function RunningPage({ route }) {
         </MapView>
       </ViewShot>
 
+
       <SafeAreaView style={styles.headerContainer}>
         <View style={styles.headerContent}>
           <Text style={styles.title}>오늘 기록</Text>
-          <Text style={styles.speedText}>{typeof currentSpeed === 'number' ? `${currentSpeed.toFixed(1)} km/h` : '0 km/h'}</Text>
+
+          <Text style={styles.speedText}>{currentSpeed} km/h</Text>
         </View>
       </SafeAreaView>
 
