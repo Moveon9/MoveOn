@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+// GameParticipatioinModal.jsx
+import React, { useState, useContext, useEffect } from 'react';
 import {
   Modal,
   View,
@@ -7,42 +8,75 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
+import PointContext from '../../context/PointContext';
+import NotEnoughCoin from './NotEnoughCoin';
+import { useNavigation } from '@react-navigation/native'; 
 
-export default function GameParticipatioinModal({ visible, onClose, onStart, point, setPoint }) {
+
+export default function GameParticipatioinModal({ visible, onClose, onStart }) {
+  const navigation = useNavigation();
+  const { point } = useContext(PointContext);
+  const [requestedPoint, setRequestedPoint] = useState('');
   const [isFocused, setIsFocused] = useState(false);
+  const [showNotEnoughModal, setShowNotEnoughModal] = useState(false);
+
+    useEffect(() => {
+    if (visible) {
+      setRequestedPoint(''); // 모달 열릴 때 입력값 초기화
+    }
+  }, [visible]);
+
+  const handleStart = () => {
+    const numeric = Number(requestedPoint);
+    if (numeric > point) {
+      onClose();
+      setTimeout(() => setShowNotEnoughModal(true), 100);
+    } else {
+      onClose();
+      navigation.navigate('GameInvitationPage',{point : numeric});
+    }
+  };
 
   return (
-    <Modal visible={visible} transparent animationType="fade">
-      <View style={styles.overlay}>
-        <View style={styles.modalBox}>
-          <Text style={styles.title}>게임에 참가하시겠습니까?</Text>
+    <>
+      <Modal visible={visible} transparent animationType="fade">
+        <View style={styles.overlay}>
+          <View style={styles.modalBox}>
+            <Text style={styles.title}>게임에 참가하시겠습니까?</Text>
 
-          <Text style={styles.label}>참여 포인트</Text>
-          <TextInput
-            style={[
-              styles.input,
-              isFocused && styles.inputFocused, // 포커스 시 스타일 추가
-            ]}
-            placeholder="ex) 0~제한 없음"
-            placeholderTextColor="#999"
-            keyboardType="numeric"
-            value={point}
-            onChangeText={setPoint}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
-          />
+            <Text style={styles.label}>참여 포인트</Text>
+            <TextInput
+              style={[styles.input, isFocused && styles.inputFocused]}
+              placeholder="ex) 0~제한 없음"
+              placeholderTextColor="#999"
+              keyboardType="numeric"
+              value={requestedPoint}
+              onChangeText={(text) => {
+                const numeric = text.replace(/[^0-9]/g, '');
+                setRequestedPoint(numeric);
+              }}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+            />
 
-          <View style={styles.buttonRow}>
-            <TouchableOpacity style={[styles.button, styles.cancel]} onPress={onClose}>
-              <Text style={styles.cancelText}>취소</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[styles.button, styles.start]} onPress={onStart}>
-              <Text style={styles.startText}>시작하기</Text>
-            </TouchableOpacity>
+            <View style={styles.buttonRow}>
+              <TouchableOpacity style={[styles.button, styles.cancel]} onPress={onClose}>
+                <Text style={styles.cancelText}>취소</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.button, styles.start]} onPress={handleStart}>
+                <Text style={styles.startText}>시작하기</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
-      </View>
-    </Modal>
+      </Modal>
+
+      {/* 포인트 부족 모달 */}
+      <NotEnoughCoin
+        visible={showNotEnoughModal}
+        onClose={() => setShowNotEnoughModal(false)}
+      />
+    </>
   );
 }
 
@@ -85,7 +119,7 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   inputFocused: {
-    borderColor: '#398342', // 포커스 시 테두리 색상 변경
+    borderColor: '#398342',
   },
   buttonRow: {
     flexDirection: 'row',
