@@ -19,8 +19,8 @@ export default function MainPage({ navigation }) {
         setRegion({
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
-          latitudeDelta: 0.01,
-          longitudeDelta: 0.01,
+          latitudeDelta: 0.002,
+          longitudeDelta: 0.002,
         });
       },
       (error) => console.log(error),
