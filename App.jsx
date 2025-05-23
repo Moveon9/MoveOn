@@ -1,9 +1,8 @@
 // src/App.js
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import React, { useState } from 'react';
+import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import Nav from './src/components/Nav';
 import MarathonListPage from './src/pages/marathon/MarathonListPage';
@@ -11,35 +10,51 @@ import MarathonInfoPage from './src/pages/marathon/MarathonInfoPage';
 import MarathonTabs from './src/components/marathon/MarathonTabs';
 import CountdownScreen from './src/pages/countdown/CountdownScreen';
 import RunningPage from './src/pages/RunningPage';
-
-import LoginPage from './src/pages/login/LoginPage'; 
-import UserInfoPage1 from './src/pages/login/UserInfo1';
-import UserInfoPage2 from './src/pages/login/UserInfo2';
-
 import MainUI from './src/components/main/MainUI';
-const Stack = createNativeStackNavigator();
+import { PointProvider } from './src/context/PointContext';
+import GameInvitationPage from './src/pages/groundchallenge/GameInvitationPage';
+import Join from './src/pages/login/Join'
+import UserInfo1 from './src/pages/login/UserInfo1';
+import UserInfo2 from './src/pages/login/UserInfo2';
+import LoginPage from './src/pages/login/LoginPage'
+import UserInfoComplete from './src/pages/login/UserInfoComplete';
 
+const Stack = createNativeStackNavigator();
 export default function App() {
+const [showGameModal, setShowGameModal] = useState(true);
+const [showInviteScreen, setShowInviteScreen] = useState(false);
+
   return (
+    <PointProvider>
       <SafeAreaProvider>
         <NavigationContainer>
-          {/* initialRouteName='Login' */}
-          <Stack.Navigator 
+          <Stack.Navigator
+            initialRouteName='Join'
             screenOptions={{
               headerShown: false,
-              gestureEnabled: true,
+              gestureEnabled: true
             }}
           >
-            {/* <Stack.Screen
-              name="Login"
-              component={LoginPage}
-              options={{
-                gestureEnabled: false,
-              }}
+            <Stack.Screen
+              name="Join"
+              component={Join}
             />
-            <Stack.Screen name="UserInfo1" component={UserInfoPage1} />
 
-            <Stack.Screen name="UserInfo2" component={UserInfoPage2} /> */}
+            <Stack.Screen 
+            name="LoginPage" 
+            component={LoginPage} />
+
+            <Stack.Screen 
+            name="UserInfo1" 
+            component={UserInfo1} />
+
+            <Stack.Screen 
+            name="UserInfo2" 
+            component={UserInfo2} />
+
+            <Stack.Screen
+              name="UserInfoComplete"
+              component={UserInfoComplete} />
 
             <Stack.Screen
               name="MainTabs"
@@ -52,6 +67,9 @@ export default function App() {
             <Stack.Screen
               name="MarathonBoard"
               component={MarathonListPage}
+              options={{
+                presentation: 'card'
+              }}
             />
 
             <Stack.Screen
@@ -60,11 +78,10 @@ export default function App() {
             />
 
             <Stack.Screen
-            name="MarathonTabs"
-            component={MarathonTabs}
-            options={{ headerShown: false }}
-          />
-
+              name="MarathonTabs"
+              component={MarathonTabs}
+              options={{ headerShown: false }}
+            />
 
             <Stack.Screen
               name="Countdown"
@@ -85,11 +102,19 @@ export default function App() {
             />
 
             <Stack.Screen name="MainUI" 
-              component={MainUI} />
+            component={MainUI} />
+
+            <Stack.Screen
+              name="GameInvitationPage"
+              component={GameInvitationPage}
+            />
+
+            
 
 
           </Stack.Navigator>
         </NavigationContainer>
       </SafeAreaProvider>
+    </PointProvider>
   );
 }
