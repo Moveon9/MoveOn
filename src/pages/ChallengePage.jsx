@@ -9,12 +9,16 @@ import {
 } from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import GameParticipationModal from './groundchallenge/GameParticipatioinModal';
+import InvitationAlert from '../components/groundchallenge/InvitationAlert'; // 경로에 맞게 조정
+
 
 export default function ChallengePage() {
   const [selected, setSelected] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [point, setPoint] = useState('');
   const navigation = useNavigation();
+  const [showAlert, setShowAlert] = useState(true); // true: 테스트용
+  const [inviteSender, setInviteSender] = useState('홍길동');
 
   // ChallengePage로 다시 돌아올 때 초기화
   useFocusEffect(
@@ -46,6 +50,8 @@ export default function ChallengePage() {
   return (
     <SafeAreaView style={styles.safeContainer}>
       <View style={styles.container}>
+        {showAlert && <InvitationAlert nickname={inviteSender} onDismiss={() => setShowAlert(false)} />}
+
         <View style={styles.header}>
           <Image
             source={require('../assets/image/common/LogoLetter.png')}

@@ -1,6 +1,7 @@
-// FriendInvitation.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import useDebounce from '../../hooks/useDebounce';
+import { getUserByNickname } from '../../api/userApi';
+import { useUser } from '../../context/UserContext';
 
 import {
   View,
@@ -12,32 +13,50 @@ import {
 } from 'react-native';
 import FriendItem from '../../components/groundchallenge/FriendItem';
 
-const mockFriends = [
-  { id: '1', nickname: '윤지석' },
-  { id: '2', nickname: '이서정' },
-  { id: '3', nickname: '동길홍' },
-  { id: '4', nickname: '윤석지' },
-  { id: '5', nickname: '전경훈' },
-  { id: '6', nickname: '전승우' },
-];
-
 export default function GameInvitationPage() {
   const [selectedId, setSelectedId] = useState(null);
   const [search, setSearch] = useState('');
+  const [filteredFriends, setFilteredFriends] = useState([]);
+  const [isSelf, setIsSelf] = useState(false); // ✅ 자기 자신 여부 상태
   const debouncedSearch = useDebounce(search, 300);
 
-  const filteredFriends = mockFriends.filter(friend =>
-    friend.nickname === debouncedSearch
-  );
+  const { nickname: myNickname } = useUser();
+
+  useEffect(() => {
+    if (!debouncedSearch) {
+      setFilteredFriends([]);
+      setIsSelf(false);
+      return;
+    }
+
+    const fetchUser = async () => {
+      if (debouncedSearch === myNickname) {
+        setFilteredFriends([]);
+        setIsSelf(true); // ✅ 자기 자신 검색됨
+        return;
+      }
+
+      const userId = await getUserByNickname(debouncedSearch);
+      if (userId) {
+        setFilteredFriends([{ id: userId, nickname: debouncedSearch }]);
+        setIsSelf(false);
+      } else {
+        setFilteredFriends([]);
+        setIsSelf(false);
+      }
+    };
+
+    fetchUser();
+  }, [debouncedSearch]);
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         {/* Header */}
         <View style={styles.header}>
-          <View style={styles.spacer} /> {/* 왼쪽 공간 확보용 */}
+          <View style={styles.spacer} />
           <Text style={styles.title}>상대 초대</Text>
-          <Text style={styles.selectText}>선택</Text> {/* 오른쪽 정렬 */}
+          <Text style={styles.selectText}>선택</Text>
         </View>
 
         {/* SearchBar */}
@@ -55,7 +74,7 @@ export default function GameInvitationPage() {
         {/* Friend List */}
         <FlatList
           data={filteredFriends}
-          keyExtractor={item => item.id}
+          keyExtractor={item => item.id.toString()}
           renderItem={({ item }) => (
             <FriendItem
               name={item.nickname}
@@ -110,5 +129,9 @@ const styles = StyleSheet.create({
   label: {
     color: '#666',
     marginBottom: 8,
+  },
+  warning: {
+    color: '#D00',
+    marginBottom: 12,
   },
 });

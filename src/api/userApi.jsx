@@ -37,3 +37,19 @@ export const loginUser = async (userData) => {
     throw error;
   }
 };
+
+
+export const getUserByNickname = async (nickname) => {
+  try {
+    const response = await axiosInstance.get(`/challnege/search/${nickname}`);
+    console.log('🔍 닉네임 검색 결과:', response.data); // 추가
+    return response.data.result;
+  } catch (error) {
+    if (error.response?.status === 404) {
+      console.warn('존재하지 않는 닉네임입니다.');
+    } else {
+      console.error('❌ 닉네임 검색 실패:', error.response?.data || error.message);
+    }
+    return null;
+  }
+};
