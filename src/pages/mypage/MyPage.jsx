@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
-import PointContext from '../context/PointContext';
+import PointContext from '../../context/PointContext';
 import { useContext } from 'react';
 
 
@@ -30,20 +30,20 @@ const MyPage = () => {
           {/* Header Section */}
           <View style={styles.header}>
             <Image
-              source={require('../assets/image/mypage/DefaultProfile.png')}
+              source={require('../../assets/image/mypage/DefaultProfile.png')}
               style={styles.profileImage}
             />
             <View style={styles.userInfo}>
               <View style={styles.usernameRow}>
                 <Text style={styles.username}>Me</Text>
                 <Image
-                  source={require('../assets/image/mypage/ic_RightButton.png')}
+                  source={require('../../assets/image/mypage/ic_RightButton.png')}
                   style={styles.arrowIcon}
                 />
               </View>
             <View style={styles.pointRow}>
               <Image
-                source={require('../assets/image/mypage/ic_Point.png')}
+                source={require('../../assets/image/mypage/ic_Point.png')}
                 style={styles.pointIcon}
               />
               <Text style={styles.pointText}>{point}</Text>
@@ -58,21 +58,21 @@ const MyPage = () => {
               onPress={() => navigation.navigate('ActivityRecord')}
             >
               <Image
-                source={require('../assets/image/mypage/ic_ActivityRecord.png')}
+                source={require('../../assets/image/mypage/ic_ActivityRecord.png')}
                 style={styles.activityIcon}
               />
               <Text style={styles.activityLabel}>활동 기록</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.activityItem}>
               <Image
-                source={require('../assets/image/mypage/ic_Achievement.png')}
+                source={require('../../assets/image/mypage/ic_Achievement.png')}
                 style={styles.activityIcon}
               />
               <Text style={styles.activityLabel}>업적</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.activityItem}>
               <Image
-                source={require('../assets/image/mypage/ic_Store.png')}
+                source={require('../../assets/image/mypage/ic_Store.png')}
                 style={styles.activityIcon}
               />
               <Text style={styles.activityLabel}>상점</Text>
@@ -108,7 +108,7 @@ const MyPage = () => {
             <TouchableOpacity key={index} style={styles.menuItem}>
               <Text style={styles.menuText}>{item}</Text>
               <Image
-                source={require('../assets/image/mypage/ic_SmallRightButton.png')}
+                source={require('../../assets/image/mypage/ic_SmallRightButton.png')}
                 style={styles.menuArrow}
               />
             </TouchableOpacity>

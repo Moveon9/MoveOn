@@ -37,3 +37,13 @@ export const loginUser = async (userData) => {
     throw error;
   }
 };
+
+export const fetchUserInfo = async (userId) => {
+  try {
+    const response = await axiosInstance.get('/user/${userId}');
+    return response.data.result;
+  } catch(error) {
+    console.error('유저 정보 불러오기 실패:', error.message);
+    throw error;
+  }
+}

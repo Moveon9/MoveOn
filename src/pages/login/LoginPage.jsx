@@ -1,3 +1,4 @@
+// src/pages/login/LoginPage.jsx
 import React, { useState } from 'react';
 import {
   View,
@@ -9,16 +10,27 @@ import {
   Alert,
   SafeAreaView,
 } from 'react-native';
-import { loginUser } from '../../api/userApi'; // 로그인 API 함수 import
+
+import { loginUser } from '../../api/userApi'; // 로그인 API
+import { useUser } from '../../context/UserContext'; // 전역 상태
 
 export default function LoginPage({ navigation }) {
   const [nickname, setNickname] = useState('');
   const [password, setPassword] = useState('');
 
+  const { setUserId, setNickname: setGlobalNickname } = useUser();
+  
   const handleLogin = async () => {
     try {
       const res = await loginUser({ nickname, password });
-      if (res.isSuccess && res.result === true) {
+
+      if (res.isSuccess && res.result) {
+        const userId = res.result; // ✅ userId 직접 받기
+
+        console.log("🔐 로그인 성공 시 userId:", userId);
+        setUserId(userId);
+        setGlobalNickname(nickname);
+
         navigation.replace('MainTabs');
       } else {
         Alert.alert('로그인 실패', res.message || '닉네임 또는 비밀번호를 확인하세요');
@@ -27,6 +39,7 @@ export default function LoginPage({ navigation }) {
       Alert.alert('오류', '로그인 중 오류가 발생했습니다.');
     }
   };
+
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -76,13 +89,6 @@ const styles = StyleSheet.create({
     height: 180,
     resizeMode: 'contain',
     marginBottom: 24,
-  },
-  label: {
-    alignSelf: 'flex-start',
-    marginLeft: 8,
-    fontSize: 14,
-    color: '#000',
-    marginBottom: 4,
   },
   input: {
     width: '100%',

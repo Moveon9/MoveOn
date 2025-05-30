@@ -41,14 +41,18 @@ export default function RecordPage({ route }) {
         distance: totalDistance,
         run_time: formatTime(elapsedTime),
         memo: memoText, // TextInput 상태로 관리 중인 memo 텍스트
-        userId: 3,       // 로그인 사용자 ID
+        userId: 1,       // 로그인 사용자 ID
         calorie: caloriesBurned,
         hrate: heartRateAvg,
       };
   
-      const result = await saveRunRecord(record);
+      const result = await saveRunRecord({
+        recordInfo: record,
+        imageUri: mapCapture,
+      });
       console.log('✅ 저장 성공:', result);
       // navigation.goBack() 등 후속 처리 가능
+      navigation.replace('MainTabs');
     } catch (err) {
       console.error('❌ 저장 실패:', err.message);
     }
