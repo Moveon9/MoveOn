@@ -12,7 +12,7 @@ import ProfileIcon from '../assets/image/nav/ic_MyNavButton.svg';
 import MainPage from '../pages/MainPage';
 import ChallengePage from '../pages/ChallengePage';
 import RankingPage from '../pages/RankingPage';
-import MyPage from '../pages/MyPage';
+import MyPage from '../pages/mypage/MyPage';
 
 const Tab = createBottomTabNavigator();
 

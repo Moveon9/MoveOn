@@ -31,8 +31,14 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>GMSApiKey</key>
+	<string>AIzaSyC5fLgIHmL8jq7Q6Jc0jvMBLrCfLjOyrlc</string>
 	<key>KAKAO_APP_KEY</key>
 	<string>네이티브 앱 키</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>tmap</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -41,11 +47,25 @@
 		<false/>
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>54.79.175.116</key>
+			<dict>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+				<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+				<key>NSTemporaryExceptionMinimumTLSVersion</key>
+				<string>TLSv1.0</string>
+			</dict>
+		</dict>
 	</dict>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>앱이 항상 위치 정보를 사용할 수 있도록 허용해주세요</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>앱이 실행되는 동안 위치를 사용합니다</string>
+	<key>TMAP_API_KEY</key>
+	<string>Api key</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -60,12 +80,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<!--t-map API-->
-	<key>TMAP_API_KEY</key>
-	<string>Api key</string>
-	<key>LSApplicationQueriesSchemes</key>
-	<array>
-		<string>tmap</string>
-	</array>
 </dict>
 </plist>

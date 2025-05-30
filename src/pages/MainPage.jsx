@@ -31,12 +31,15 @@ export default function MainPage({ navigation }) {
   const handleStartPress = () => {
     navigation.navigate('Countdown');
   };
+  const handelRegionChange = (newRegion) => {
+    setRegion(newRegion);
+  };
 
   return (
     <View style={styles.container}>
       <MapViewComponent 
         region={region} 
-        onRegionChange={setRegion}
+        onRegionChangeComplete={handelRegionChange}
       />
       <MainUI onStartPress={handleStartPress} />
     </View>
