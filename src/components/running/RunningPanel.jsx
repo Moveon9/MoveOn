@@ -9,12 +9,13 @@ import {
   Image,
   Dimensions,
 } from 'react-native';
+import UseDistance from '../../components/running/utils/UseDistance';
 import playIcon from '../../assets/image/main/ic_play.png';
 import pauseIcon from '../../assets/image/main/ic_pause.png';
 import stopIcon from '../../assets/image/main/ic_stop.png';
 
-const MAX_HEIGHT = 320;  // 패널 최대 높이
-const MIN_HEIGHT = 160;  // 패널 최소 높이
+const MAX_HEIGHT = 320; // 패널 최대 높이
+const MIN_HEIGHT = 160; // 패널 최소 높이
 
 export default function RunningPanel({
   elapsedTime,
@@ -25,11 +26,11 @@ export default function RunningPanel({
   filledGridCount,
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
-  //const [isRunning, setIsRunning] = useState(false);
-  //const [time, setTime] = useState(0);
-
   const panelHeight = useRef(new Animated.Value(MIN_HEIGHT)).current;
   const timerRef = useRef(null);
+
+  // 거리 추적 훅 사용
+  const { distance, formattedDistance, resetDistance } = UseDistance(isPaused);
 
   const formatTime = (seconds) => {
     const hrs = Math.floor(seconds / 3600);
@@ -44,7 +45,7 @@ export default function RunningPanel({
     onPanResponderMove: (_, gestureState) => {
       const newHeight = Math.max(
         MIN_HEIGHT,
-        Math.min(MAX_HEIGHT - gestureState.dy, MAX_HEIGHT)
+        Math.min(MAX_HEIGHT - gestureState.dy, MAX_HEIGHT),
       );
       panelHeight.setValue(newHeight);
     },
@@ -66,25 +67,10 @@ export default function RunningPanel({
     }).start();
   };
 
-  const startTimer = () => {
-    if (!isPaused && onResume) {
-      setIsRunning(true);
-      timerRef.current = setInterval(() => {
-        setTime((prev) => prev + 1);
-      }, 1000);
-    }
-  };
-
-  const pauseTimer = () => {
-    setIsRunning(false);
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-    }
-  };
-
-  const stopTimer = () => {
-    pauseTimer();
-    setTime(0);
+  // 러닝 중지 시 거리 초기화
+  const handleStop = () => {
+    resetDistance();
+    onStop();
   };
 
   useEffect(() => {
@@ -96,7 +82,7 @@ export default function RunningPanel({
   }, []);
 
   return (
-    <Animated.View style={[styles.panel, { height: panelHeight }]}>
+    <Animated.View style={[styles.panel, { height: panelHeight }]}>      
       <TouchableOpacity style={styles.handleContainer} onPress={handleToggleExpand}>
         <View style={styles.handle} />
       </TouchableOpacity>
@@ -113,7 +99,7 @@ export default function RunningPanel({
               <TouchableOpacity onPress={onPause} style={styles.iconButton}>
                 <Image source={pauseIcon} style={styles.iconImage} />
               </TouchableOpacity>
-              <TouchableOpacity onPress={onStop} style={styles.iconButton}>
+              <TouchableOpacity onPress={handleStop} style={styles.iconButton}>
                 <Image source={stopIcon} style={styles.iconImage} />
               </TouchableOpacity>
             </View>
@@ -122,7 +108,7 @@ export default function RunningPanel({
               <TouchableOpacity onPress={onResume} style={styles.iconButton}>
                 <Image source={playIcon} style={styles.iconImage} />
               </TouchableOpacity>
-              <TouchableOpacity onPress={onStop} style={styles.iconButton}>
+              <TouchableOpacity onPress={handleStop} style={styles.iconButton}>
                 <Image source={stopIcon} style={styles.iconImage} />
               </TouchableOpacity>
             </View>
@@ -134,7 +120,7 @@ export default function RunningPanel({
             <View style={styles.statsColumn}>
               <View style={styles.statItem}>
                 <Text style={styles.statLabel}>거리</Text>
-                <Text style={styles.statValue}>0m</Text>
+                <Text style={styles.statValue}>{formattedDistance}</Text>
               </View>
               <View style={styles.statItem}>
                 <Text style={styles.statLabel}>현재 칸의 수</Text>
