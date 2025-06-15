@@ -1,97 +1,125 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# 🏃 MoveOn: 게임처럼 즐기는 러닝, 건강한 습관의 시작
 
-# Getting Started
+> GPS 기반 러닝 앱 + 게임 시스템 = **MoveOn**  
+> 러닝을 하며 땅을 점령하고, 친구와 마라톤이나 땅따먹기 게임을 즐기세요!
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+---
 
-## Step 1: Start Metro
+## 📌 프로젝트 개요
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+**MoveOn**은 건강한 습관 형성을 돕는 위치 기반 러닝 게임 앱입니다.  
+사용자가 달리거나 걸으면서 점령한 구역을 지도에 시각화하고, 이를 통해 순위 경쟁, 마라톤, 땅따먹기 등을 즐길 수 있습니다.
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+### 🎯 핵심 기능
+- 지도 기반 **영역 점령**
+- **1:1 실시간 땅따먹기 게임** (웹소켓 기반)
+- **미니 마라톤** 챌린지
+- 운동 데이터 기록 및 **리워드 시스템**
+- **걸음 수, 칼로리, 이동 거리** 통계 제공
+- AWS S3를 활용한 기록 이미지 저장
 
-```sh
-# Using npm
-npm start
+---
 
-# OR using Yarn
-yarn start
+## ⚙️ 설치 환경 및 기술 스택
+
+### 🧪 Frontend
+- React Native
+- react-native-maps
+- react-native-geolocation-service
+- Context API
+- Debounce 처리 (API 과다 호출 방지)
+
+### 🛠 Backend
+- Spring Boot + JPA + QueryDSL
+- WebSocket (Stomp)
+- Oracle DB (OCI 기반, Wallet 사용)
+- Swagger / Postman
+- Prometheus + Grafana (모니터링)
+- AWS EC2, S3, GitHub Actions
+- Docker / Docker-compose
+
+---
+
+## 📲 설치 및 실행 방법
+
+### ✅ 프론트엔드
+```bash
+git clone https://github.com/your-org/moveon-app.git
+cd moveon-app/frontend
+npm install
+npx react-native run-ios  # 또는 run-android
 ```
+---
+## ✅ 백엔드 실행 방법
 
-## Step 2: Build and run your app
-
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
-
-```sh
-# Using npm
-npm run android
-
-# OR using Yarn
-yarn android
+```bash
+cd backend
+./gradlew build
+docker-compose up
 ```
+💡 EC2 환경에서는 GitHub Actions 자동 배포가 설정되어 있습니다.
 
-### iOS
+---
+## 📊 모니터링 시스템 구성
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+- **Prometheus**:  
+  Spring Boot 서버의 메트릭을 수집  
+  예: `process_cpu_usage`, `jvm_live_threads`
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+- **Grafana**:  
+  Prometheus로부터 수집된 데이터를 시각화  
+  Slack 알림 기능을 통해 관리자에게 실시간 경고 전송
 
-```sh
-bundle install
+- **Docker-compose 구성**:  
+  모니터링 시스템을 메인 서버와 **분리된 인스턴스**에서 실행  
+  → 서버 장애 발생 시에도 모니터링 시스템은 **지속 운영 가능**
+
+---
+
+## ☁️ S3 기록 저장 구조
+
+- 유저가 러닝 종료 시 **운동 기록 이미지 캡처** API 호출  
+- 캡처된 이미지는 **AWS S3 버킷에 업로드**  
+- S3 내부에서는 **유저 ID 또는 닉네임 기반으로 폴더 분리 저장**
+
+---
+
+## 🔐 Oracle DB Wallet 보안 처리 방식
+
+- `wallet.zip` 파일을 **base64로 인코딩**하여 GitHub Secret에 저장  
+- GitHub Actions 실행 시 EC2로 전송 → 자동 **디코딩 및 압축 해제**
+
+```bash
+echo "$ORACLE_WALLET_BASE64" | base64 -d > wallet.zip
+scp wallet.zip ec2:/home/ubuntu/
+ssh ec2 "unzip wallet.zip -d wallet && rm wallet.zip"
 ```
+---
+## 🧩 협업 툴
 
-Then, and every time you update your native dependencies, run:
+| 툴       | 용도                                |
+|----------|-------------------------------------|
+| GitHub   | 버전 관리, CI/CD 파이프라인 관리    |
+| Slack    | 모니터링 알림 및 팀 커뮤니케이션    |
+| Notion   | 회의록 작성, 일정 및 기능 정리       |
+| Swagger  | API 문서 자동 생성 및 테스트 도구   |
 
-```sh
-bundle exec pod install
-```
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+---
+## 🎮 기대 효과
 
-```sh
-# Using npm
-npm run ios
+- 운동 습관 형성과 **지속적인 동기 부여**
+- 게임형 콘텐츠로 **MZ세대 친화적 UX 제공**
+- **야외 활동 활성화** 및 탐험의 재미 유도
+- **소셜 기능 강화**를 통한 커뮤니티 형성
+- **브랜드 및 지자체 협업**을 통한 보상 기반 챌린지 운영 가능
 
-# OR using Yarn
-yarn ios
-```
+---
+## 🧠 팀원 소개
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+| 이름   | 전공               | 역할                                |
+|--------|--------------------|-------------------------------------|
+| 윤지석 | 인공지능 소프트웨어 | 백엔드 개발, DB 구성                |
+| 전승우 | 인공지능 소프트웨어 | 프론트엔드 개발, 마라톤 기능 개발    |
+| 이서정 | 인공지능 소프트웨어 | 프론트엔드 개발, 땅따먹기 기능 개발           |
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
-
-## Step 3: Modify your app
-
-Now that you have successfully run the app, let's make changes!
-
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
-
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
-
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
